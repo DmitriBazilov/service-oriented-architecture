@@ -1,0 +1,5 @@
+.idea/
+wildfly/
+build/
+.gradle
+.kotlin
