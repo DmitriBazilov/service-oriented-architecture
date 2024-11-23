@@ -31,6 +31,12 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api:5.0.0")
     compileOnly("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
 
+    implementation("org.hibernate:hibernate-core:6.0.2.Final")
+    implementation("org.postgresql:postgresql:42.7.2")
+    implementation("org.glassfish.jaxb:jaxb-runtime:3.0.2")
+    implementation("org.hibernate.validator:hibernate-validator:7.0.4.Final")
+    implementation("org.hibernate:hibernate-validator-annotation-processor:7.0.4.Final")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
