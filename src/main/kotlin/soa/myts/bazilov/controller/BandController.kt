@@ -18,8 +18,7 @@ class BandController {
     @GET
     @Produces(MediaType.APPLICATION_XML)
     fun getBands(): Response {
-
-        val bands = bandService.getBands()
-        return Response.ok().entity(bands).build()
+        val banditos = bandService.getBands()
+        return Response.ok().entity(banditos).build()
     }
 }
