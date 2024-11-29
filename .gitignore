@@ -3,3 +3,4 @@ wildfly/
 build/
 .gradle
 .kotlin
+deploy.sh

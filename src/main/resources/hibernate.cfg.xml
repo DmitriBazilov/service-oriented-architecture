@@ -11,10 +11,10 @@
         <property name="show_sql">true</property>
         <!--        <property name="connection.username">s335106</property>-->
         <!--        <property name="connection.password">wDhRJX2u1BHTqJq2</property>-->
-        <property name="connection.username">postgres</property>
+        <property name="connection.username">dimibazi</property>
         <property name="connection.password">1234</property>
         <property name="current_session_context_class">thread</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <mapping class="ru.itmo.spacemarinesservice.model.entity.SpaceMarine"/>
+        <mapping class="soa.myts.bazilov.model.domain.Band"/>
     </session-factory>
 </hibernate-configuration>

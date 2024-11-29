@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.20"
     kotlin("plugin.allopen") version "2.0.20"
+    kotlin("plugin.noarg") version "2.0.20"
     java
     war
 }
@@ -22,6 +23,13 @@ val junitVersion = "5.9.1"
 allOpen {
     annotation("jakarta.ws.rs.Path")
     annotation("jakarta.enterprise.context.ApplicationScoped")
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.xml.bind.annotation.XmlRootElement")
 }
 
 dependencies {

@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import soa.myts.bazilov.model.domain.Band
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder
+import soa.myts.bazilov.model.domain.MusicStudio
 
 @ApplicationScoped
 class DatabaseSessionManager {
@@ -20,6 +21,7 @@ class DatabaseSessionManager {
         val configuration = Configuration()
             .configure(CONFIG_NAME)
             .addAnnotatedClass(Band::class.java)
+            .addAnnotatedClass(MusicStudio::class.java)
         StandardServiceRegistryBuilder()
             .applySettings(configuration.properties).build()
         sessionFactory = configuration.buildSessionFactory()
