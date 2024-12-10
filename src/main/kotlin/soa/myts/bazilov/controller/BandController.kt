@@ -25,7 +25,7 @@ class BandController {
         @QueryParam("filter")
         filterList: List<String>
     ): Response {
-        val banditos = bandService.getBands()
+        val banditos = bandService.getBands(filterList)
         return Response.ok().entity(banditos).build()
     }
 

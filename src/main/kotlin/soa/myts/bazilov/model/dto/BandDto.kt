@@ -4,9 +4,11 @@ import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlElement
 import jakarta.xml.bind.annotation.XmlRootElement
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter
+import soa.myts.bazilov.infrastructure.LocalDateXmlAdapter
 import soa.myts.bazilov.model.domain.Band
 import soa.myts.bazilov.model.domain.MusicGenre
-import soa.myts.bazilov.model.domain.MusicStudio
+import java.time.LocalDate
 
 @XmlRootElement(name = "band")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,6 +21,8 @@ data class BandDto(
     var albumsCount: Long,
     var description: String,
     var genre: MusicGenre,
+    @XmlJavaTypeAdapter(value = LocalDateXmlAdapter::class)
+    var creationDate: LocalDate?,
     @XmlElement(name = "studio")
     var studio: MusicStudioDto?,
 )

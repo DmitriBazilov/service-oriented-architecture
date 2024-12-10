@@ -29,6 +29,7 @@ data class Band(
     @Column(name = "albums_count")
     val albumsCount: Long,
 
+    @Column(name = "description")
     val description: String,
 
     @Enumerated(EnumType.STRING)
@@ -53,8 +54,8 @@ fun Band.toDto() = BandDto(
     albumsCount = albumsCount,
     description = description,
     genre = genre,
-    studio = studio?.toDto()
-
+    studio = studio?.toDto(),
+    creationDate = creationDate,
 )
 
 fun Band.Coordinates.toDto() = CoordinatesDto(
