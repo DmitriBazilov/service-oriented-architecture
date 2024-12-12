@@ -26,13 +26,13 @@ sealed interface Field {
     }
 
     data object CreationDate : Field {
-        override val dbName: String = "creation_date"
+        override val dbName: String = "creationDate"
         override val domainName: String = "creationDate"
         override val valueType: Type = Type.LOCAL_DATE
     }
 
     data object NumberOfParticipants : Field {
-        override val dbName: String = "number_of_participants"
+        override val dbName: String = "numberOfParticipants"
         override val domainName: String = "numberOfParticipants"
         override val valueType: Type = Type.LONG
     }
@@ -50,13 +50,13 @@ sealed interface Field {
     }
 
     data object X : Field {
-        override val dbName: String = "x"
+        override val dbName: String = "coordinates.x"
         override val domainName: String = "Coordinates.x"
         override val valueType: Type = Type.DOUBLE
     }
 
     data object Y : Field {
-        override val dbName: String = "y"
+        override val dbName: String = "coordinates.y"
         override val domainName: String = "Coordinates.y"
         override val valueType: Type = Type.LONG
     }
@@ -68,13 +68,13 @@ sealed interface Field {
     }
 
     data object StudioName : Field {
-        override val dbName: String = "music_studio.name"
+        override val dbName: String = "name"
         override val domainName: String = "Studio.name"
         override val valueType: Type = Type.STRING
     }
 
     data object StudioAddress : Field {
-        override val dbName: String = "studio.address"
+        override val dbName: String = "address"
         override val domainName: String = "Studio.address"
         override val valueType: Type = Type.STRING
     }

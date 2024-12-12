@@ -21,7 +21,7 @@ data class BandDto(
     var albumsCount: Long,
     var description: String,
     var genre: MusicGenre,
-    @XmlJavaTypeAdapter(value = LocalDateXmlAdapter::class)
+    @field:XmlJavaTypeAdapter(value = LocalDateXmlAdapter::class)
     var creationDate: LocalDate?,
     @XmlElement(name = "studio")
     var studio: MusicStudioDto?,

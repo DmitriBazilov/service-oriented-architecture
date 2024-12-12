@@ -3,13 +3,15 @@ package soa.myts.bazilov.repository
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
-import jakarta.persistence.criteria.Root
 import org.hibernate.Session
 import soa.myts.bazilov.configuration.DatabaseSessionManager
 import soa.myts.bazilov.model.domain.Band
+import soa.myts.bazilov.model.domain.MusicStudio
 import soa.myts.bazilov.model.domain.filter.Filter
 import soa.myts.bazilov.model.domain.filter.Operator
+import soa.myts.bazilov.model.domain.filter.field.Field
 import soa.myts.bazilov.model.domain.filter.field.Type
 import java.time.LocalDate
 
@@ -46,10 +48,20 @@ class BandRepository {
             val criteriaBuilder = session.criteriaBuilder
             var criteriaQuery = criteriaBuilder.createQuery(Band::class.java)
             val root = criteriaQuery.from(Band::class.java)
-
+            val join = root.join(MusicStudio::class.java)
             val predicates = filters.map { filter ->
-                filter.toPredicate(criteriaBuilder, root)
+                val name = filter.field.dbName.split(".").last()
+                return@map when (filter.field) {
+                    is Field.X, Field.Y -> filter.toPredicate(
+                        criteriaBuilder,
+                        root.get<Any>(filter.field.dbName.split(".")[0]),
+                        name,
+                    )
+                    is Field.StudioName, Field.StudioAddress -> filter.toPredicate(criteriaBuilder, join, name)
+                    else -> filter.toPredicate(criteriaBuilder, root, name)
+                }
             }
+            println(predicates)
             val whereClause = criteriaBuilder.and(*predicates.toTypedArray())
             criteriaQuery = criteriaQuery.where(whereClause)
 
@@ -68,16 +80,15 @@ class BandRepository {
     }
 }
 
-fun Filter.toPredicate(cb: CriteriaBuilder, root: Root<Band>) = when (this.field.valueType) {
-    Type.INT -> toPredicateInt(cb, root)
-    Type.LONG -> toPredicateLong(cb, root)
-    Type.DOUBLE -> toPredicateDouble(cb, root)
-    Type.STRING -> toPredicateString(cb, root)
-    Type.LOCAL_DATE -> toPredicateDate(cb, root)
+fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when (this.field.valueType) {
+    Type.INT -> toPredicateInt(cb, root, name)
+    Type.LONG -> toPredicateLong(cb, root, name)
+    Type.DOUBLE -> toPredicateDouble(cb, root, name)
+    Type.STRING -> toPredicateString(cb, root, name)
+    Type.LOCAL_DATE -> toPredicateDate(cb, root, name)
 }
 
-private fun Filter.toPredicateInt(cb: CriteriaBuilder, root: Root<Band>): Predicate? {
-    val name = this.field.dbName
+private fun Filter.toPredicateInt(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<Int>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<Int>(name), this.value)
@@ -89,8 +100,7 @@ private fun Filter.toPredicateInt(cb: CriteriaBuilder, root: Root<Band>): Predic
     }
 }
 
-private fun Filter.toPredicateLong(cb: CriteriaBuilder, root: Root<Band>): Predicate? {
-    val name = this.field.dbName
+private fun Filter.toPredicateLong(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<Long>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<Long>(name), this.value)
@@ -102,8 +112,7 @@ private fun Filter.toPredicateLong(cb: CriteriaBuilder, root: Root<Band>): Predi
     }
 }
 
-private fun Filter.toPredicateString(cb: CriteriaBuilder, root: Root<Band>): Predicate? {
-    val name = this.field.dbName
+private fun Filter.toPredicateString(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<String>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<String>(name), this.value)
@@ -112,8 +121,7 @@ private fun Filter.toPredicateString(cb: CriteriaBuilder, root: Root<Band>): Pre
     }
 }
 
-private fun Filter.toPredicateDouble(cb: CriteriaBuilder, root: Root<Band>): Predicate? {
-    val name = this.field.dbName
+private fun Filter.toPredicateDouble(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<Double>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<Double>(name), this.value)
@@ -125,15 +133,14 @@ private fun Filter.toPredicateDouble(cb: CriteriaBuilder, root: Root<Band>): Pre
     }
 }
 
-private fun Filter.toPredicateDate(cb: CriteriaBuilder, root: Root<Band>): Predicate? {
-    val name = this.field.dbName
+private fun Filter.toPredicateDate(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<LocalDate>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<LocalDate>(name), this.value)
         Operator.LT -> cb.lessThan(root.get(name), this.value as LocalDate)
-        Operator.LTE -> cb.lessThan(root.get(name), this.value as LocalDate)
-        Operator.GT -> cb.lessThan(root.get(name), this.value as LocalDate)
-        Operator.GTE -> cb.lessThan(root.get(name), this.value as LocalDate)
+        Operator.LTE -> cb.lessThanOrEqualTo(root.get(name), this.value as LocalDate)
+        Operator.GT -> cb.greaterThan(root.get(name), this.value as LocalDate)
+        Operator.GTE -> cb.greaterThanOrEqualTo(root.get(name), this.value as LocalDate)
         else -> null
     }
 }

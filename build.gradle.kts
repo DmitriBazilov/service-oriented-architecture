@@ -7,8 +7,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 group = "soa.myts.bazilov"
@@ -39,9 +39,9 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api:5.0.0")
     compileOnly("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
 
+    implementation("org.hibernate:hibernate-jpamodelgen:5.0.7.Final")
     implementation("org.hibernate:hibernate-core:6.0.2.Final")
     implementation("org.postgresql:postgresql:42.7.2")
-    implementation("org.glassfish.jaxb:jaxb-runtime:3.0.2")
     implementation("org.hibernate.validator:hibernate-validator:7.0.4.Final")
     implementation("org.hibernate:hibernate-validator-annotation-processor:7.0.4.Final")
 
@@ -54,5 +54,14 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(11)
 }
+
+//tasks.withType(JavaCompile::class) {
+//    options.generatedSourceOutputDirectory.set(file("src/generated/"))
+//}
+//
+//jpaModelgen {
+//    library = "org.hibernate:hibernate-jpamodelgen:5.0.7.Final"
+//    jpaModelgenSourcesDir = "src/generated/"
+//}
