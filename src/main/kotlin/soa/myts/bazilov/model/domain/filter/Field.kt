@@ -51,13 +51,13 @@ sealed interface Field {
 
     data object X : Field {
         override val dbName: String = "coordinates.x"
-        override val domainName: String = "Coordinates.x"
+        override val domainName: String = "coordinate.x"
         override val valueType: Type = Type.DOUBLE
     }
 
     data object Y : Field {
         override val dbName: String = "coordinates.y"
-        override val domainName: String = "Coordinates.y"
+        override val domainName: String = "coordinate.y"
         override val valueType: Type = Type.LONG
     }
 
@@ -69,13 +69,13 @@ sealed interface Field {
 
     data object StudioName : Field {
         override val dbName: String = "name"
-        override val domainName: String = "Studio.name"
+        override val domainName: String = "studio.name"
         override val valueType: Type = Type.STRING
     }
 
     data object StudioAddress : Field {
         override val dbName: String = "address"
-        override val domainName: String = "Studio.address"
+        override val domainName: String = "studio.address"
         override val valueType: Type = Type.STRING
     }
 
