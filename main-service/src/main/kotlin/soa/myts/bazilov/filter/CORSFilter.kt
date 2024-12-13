@@ -25,7 +25,7 @@ class CORSFilter : ContainerResponseFilter {
         )
         responseContext.headers.add(
             "Access-Control-Allow-Methods",
-            "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+            "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH"
         )
     }
 }
