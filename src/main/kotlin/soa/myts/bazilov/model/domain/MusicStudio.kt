@@ -9,12 +9,12 @@ import soa.myts.bazilov.model.dto.MusicStudioDto
 
 @Entity
 @Table(name = "music_studio")
-data class MusicStudio(
+class MusicStudio(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
-    val name: String,
-    val address: String?
+    var id: Int = 0,
+    var name: String,
+    var address: String?
 )
 
 fun MusicStudio.toDto() = MusicStudioDto(

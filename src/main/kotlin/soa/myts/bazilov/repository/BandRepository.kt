@@ -144,6 +144,61 @@ class BandRepository {
             }
         }
     }
+
+    fun update(id: Int, band: Band): Band? {
+        val session = databaseSessionManager.getSession()
+        try {
+            session.beginTransaction()
+            session.get(Band::class.java, id) ?: return null
+            val res = session.merge(band)
+            session.transaction.commit()
+            return res
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (session.transaction.isActive) {
+                session.transaction.rollback()
+            }
+            throw e
+        } finally {
+            if (session.isOpen) {
+                databaseSessionManager.closeSession(session)
+            }
+        }
+    }
+
+    fun deleteByStudioId(studioId: Int): Int {
+        val session = databaseSessionManager.getSession()
+        try {
+            session.beginTransaction()
+            val query = session.createQuery("delete Band where studio.id = :studioId")
+            query.setParameter("studioId", studioId)
+            return query.executeUpdate()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (session.transaction.isActive) {
+                session.transaction.rollback()
+            }
+            throw e
+        } finally {
+            if (session.isOpen) {
+                databaseSessionManager.closeSession(session)
+            }
+        }
+    }
+}
+
+private fun Band.mergeUpdate(band: Band) {
+    this.name = band.name
+    this.genre = band.genre
+    this.albumsCount = band.albumsCount
+    this.numberOfParticipants = band.numberOfParticipants
+    this.description = band.description
+    this.coordinates.x = band.coordinates.x
+    this.coordinates.y = band.coordinates.y
+    band.studio?.let {
+        this.studio?.name = it.name
+        this.studio?.address = it.address
+    }
 }
 
 private fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when (this.field.valueType) {

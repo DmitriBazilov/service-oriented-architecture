@@ -8,32 +8,32 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "music_bands")
-data class Band(
+class Band(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    var id: Int = 0,
 
-    val name: String,
+    var name: String,
 
     @Embedded
-    val coordinates: Coordinates,
+    var coordinates: Coordinates,
 
     @Column(name = "creation_date")
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
-    val creationDate: LocalDate = LocalDate.now(),
+    var creationDate: LocalDate = LocalDate.now(),
 
     @Column(name = "number_of_participants")
-    val numberOfParticipants: Long,
+    var numberOfParticipants: Long,
 
     @Column(name = "albums_count")
-    val albumsCount: Long,
+    var albumsCount: Long,
 
     @Column(name = "description")
-    val description: String,
+    var description: String,
 
     @Enumerated(EnumType.STRING)
-    val genre: MusicGenre,
+    var genre: MusicGenre,
 
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "music_studio_id")
@@ -41,8 +41,8 @@ data class Band(
 ) {
     @Embeddable
     data class Coordinates(
-        val x: Double,
-        val y: Long?
+        var x: Double,
+        var y: Long?
     )
 }
 
