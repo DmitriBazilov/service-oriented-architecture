@@ -48,6 +48,7 @@ class BandRepository {
             session.beginTransaction()
             val criteriaBuilder = session.criteriaBuilder
             var criteriaQuery = criteriaBuilder.createQuery(Band::class.java)
+//            criteriaQuery.orderBy(sortClause.toOrder())
             val root = criteriaQuery.from(Band::class.java)
             val join = root.join(MusicStudio::class.java)
             val predicates = filters.map { filter ->
@@ -62,6 +63,7 @@ class BandRepository {
                     else -> filter.toPredicate(criteriaBuilder, root, name)
                 }
             }
+
             println(predicates)
             val whereClause = criteriaBuilder.and(*predicates.toTypedArray())
             criteriaQuery = criteriaQuery.where(whereClause)
@@ -118,7 +120,10 @@ private fun Filter.toPredicateString(cb: CriteriaBuilder, root: Path<*>, name: S
         Operator.EQ -> cb.equal(root.get<String>(name), this.value)
         Operator.NEQ -> cb.notEqual(root.get<String>(name), this.value)
         Operator.LIKE -> cb.like(root.get(name), this.value as String)
-        else -> null
+        Operator.LT -> cb.lessThan(root.get(name), this.value as String)
+        Operator.LTE -> cb.lessThanOrEqualTo(root.get(name), this.value as String)
+        Operator.GT -> cb.greaterThan(root.get(name), this.value as String)
+        Operator.GTE -> cb.greaterThanOrEqualTo(root.get(name), this.value as String)
     }
 }
 
@@ -144,4 +149,8 @@ private fun Filter.toPredicateDate(cb: CriteriaBuilder, root: Path<*>, name: Str
         Operator.GTE -> cb.greaterThanOrEqualTo(root.get(name), this.value as LocalDate)
         else -> null
     }
+}
+
+private fun SortClause.toOrder(cb: CriteriaBuilder, root: Path<*>) {
+
 }
