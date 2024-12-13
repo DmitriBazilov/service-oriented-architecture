@@ -57,6 +57,8 @@ kotlin {
     jvmToolchain(11)
 }
 
+tasks.register("prepareKotlinBuildScriptModel"){}
+
 //tasks.withType(JavaCompile::class) {
 //    options.generatedSourceOutputDirectory.set(file("src/generated/"))
 //}
