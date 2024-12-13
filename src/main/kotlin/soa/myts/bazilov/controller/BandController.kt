@@ -41,11 +41,16 @@ class BandController {
         return Response.ok().entity(resultBand).build()
     }
 
-//    @DELETE
-//    fun deleteBand(
-//        @PathParam("{id}")
-//        id: Int
-//    ): Response {
-//
-//    }
+    @DELETE
+    @Path("{id}")
+    fun deleteBand(
+        @PathParam("id")
+        id: Int
+    ): Response {
+        val cnt = bandService.deleteById(id)
+        if (cnt == 0) {
+            return Response.status(400).entity("not found band with id $id").build()
+        }
+        return Response.ok().build()
+    }
 }

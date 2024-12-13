@@ -41,7 +41,7 @@ class BandService {
         return band.toDto()
     }
 
-    fun deleteById(id: Int) {
-
+    fun deleteById(id: Int): Int {
+        return bandRepository.deleteById(id)
     }
 }
