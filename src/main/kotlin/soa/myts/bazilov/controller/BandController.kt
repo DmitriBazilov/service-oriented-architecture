@@ -53,4 +53,17 @@ class BandController {
         }
         return Response.ok().build()
     }
+
+    @GET
+    @Path("{band-id}")
+    fun getById(
+        @PathParam("band-id")
+        id: Int
+    ): Response {
+        val band = bandService.findById(id)
+        val response = band?.let {
+            Response.ok().entity(it).build()
+        } ?: Response.status(400).entity("not found band with id $id").build()
+        return response
+    }
 }

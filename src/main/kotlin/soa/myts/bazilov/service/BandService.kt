@@ -44,4 +44,8 @@ class BandService {
     fun deleteById(id: Int): Int {
         return bandRepository.deleteById(id)
     }
+
+    fun findById(id: Int): BandDto? {
+        return bandRepository.findById(id)?.toDto()
+    }
 }

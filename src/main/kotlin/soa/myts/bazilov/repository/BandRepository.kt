@@ -122,6 +122,28 @@ class BandRepository {
             }
         }
     }
+
+    fun findById(id: Int): Band? {
+        val session = databaseSessionManager.getSession()
+        try {
+            session.beginTransaction()
+            val query = session.createQuery("from Band where id = :id")
+            query.setParameter("id", id)
+
+            return query.list().firstOrNull() as Band?
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (session.transaction.isActive) {
+                session.transaction.rollback()
+            }
+            throw e
+        } finally {
+            if (session.isOpen) {
+                databaseSessionManager.closeSession(session)
+            }
+        }
+    }
 }
 
 private fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when (this.field.valueType) {
