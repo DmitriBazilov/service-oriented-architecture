@@ -74,7 +74,7 @@ class BandController {
     }
 
     @GET
-    @Path("{name-substr}")
+    @Path("name/{name-substr}")
     fun getByNameSubstring(
         @PathParam("name-substr")
         nameSubstring: String
@@ -89,7 +89,7 @@ class BandController {
         @QueryParam("genre")
         genre: MusicGenre
     ): Response {
-        val bands = bandService.countGenres(genre)
+        val bands = bandService.countGenres(genre).bands?.size
         return Response.ok().entity(bands).build()
     }
 
@@ -121,3 +121,10 @@ class BandController {
         return Response.ok().build()
     }
 }
+
+/*
+TODO
+pagination
+second service
+error handling
+ */
