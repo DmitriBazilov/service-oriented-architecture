@@ -42,7 +42,7 @@ data class Band(
     @Embeddable
     data class Coordinates(
         val x: Double,
-        val y: Int?
+        val y: Long?
     )
 }
 

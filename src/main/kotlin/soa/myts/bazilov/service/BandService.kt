@@ -40,4 +40,8 @@ class BandService {
         bandRepository.saveBand(band)
         return band.toDto()
     }
+
+    fun deleteById(id: Int) {
+
+    }
 }

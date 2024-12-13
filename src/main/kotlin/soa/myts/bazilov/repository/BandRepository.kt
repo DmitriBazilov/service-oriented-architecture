@@ -11,9 +11,9 @@ import soa.myts.bazilov.configuration.DatabaseSessionManager
 import soa.myts.bazilov.model.domain.Band
 import soa.myts.bazilov.model.domain.MusicGenre
 import soa.myts.bazilov.model.domain.MusicStudio
+import soa.myts.bazilov.model.domain.filter.Field
 import soa.myts.bazilov.model.domain.filter.Filter
 import soa.myts.bazilov.model.domain.filter.Operator
-import soa.myts.bazilov.model.domain.filter.Field
 import soa.myts.bazilov.model.domain.filter.SortClause
 import soa.myts.bazilov.model.domain.filter.SortType
 import soa.myts.bazilov.model.domain.filter.Type
@@ -51,7 +51,7 @@ class BandRepository {
             val criteriaBuilder = session.criteriaBuilder
             var criteriaQuery = criteriaBuilder.createQuery(Band::class.java)
             val root = criteriaQuery.from(Band::class.java)
-            val join = root.join(MusicStudio::class.java)
+            val join = root.join<Band, MusicStudio>("studio")
             val orderName = sortClause.field.dbName.split(".").last()
             val order = when (sortClause.field) {
                 Field.X, Field.Y -> sortClause.toOrder(
@@ -100,9 +100,31 @@ class BandRepository {
             }
         }
     }
+
+    fun deleteById(id: Int): Int {
+        val session = databaseSessionManager.getSession()
+        try {
+            session.beginTransaction()
+            val query = session.createQuery("delete Band where id = :id")
+            query.setParameter("id", id)
+
+            return query.executeUpdate()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (session.transaction.isActive) {
+                session.transaction.rollback()
+            }
+            throw e
+        } finally {
+            if (session.isOpen) {
+                databaseSessionManager.closeSession(session)
+            }
+        }
+    }
 }
 
-fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when (this.field.valueType) {
+private fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when (this.field.valueType) {
     Type.INT -> toPredicateInt(cb, root, name)
     Type.LONG -> toPredicateLong(cb, root, name)
     Type.DOUBLE -> toPredicateDouble(cb, root, name)

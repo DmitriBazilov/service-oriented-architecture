@@ -9,7 +9,7 @@ import soa.myts.bazilov.model.domain.Band
 @XmlAccessorType(XmlAccessType.FIELD)
 data class CoordinatesDto(
     val x: Double,
-    val y: Int? = null,
+    val y: Long? = null,
 )
 
 fun CoordinatesDto.toDomain() = Band.Coordinates(

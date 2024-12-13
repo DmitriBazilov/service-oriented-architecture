@@ -10,7 +10,7 @@ import soa.myts.bazilov.model.domain.Band
 import soa.myts.bazilov.model.domain.MusicGenre
 import java.time.LocalDate
 
-@XmlRootElement(name = "band")
+@XmlRootElement(name = "MusicBand")
 @XmlAccessorType(XmlAccessType.FIELD)
 data class BandDto(
     var id: Int? = null,
