@@ -42,7 +42,7 @@ class BandRepository {
         }
     }
 
-    fun getBands(filters: List<Filter>, sortClause: SortClause = SortClause(Field.Id, SortType.ASC)): List<Band> {
+    fun getBands(filters: List<Filter>, sortClause: SortClause): List<Band> {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()

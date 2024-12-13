@@ -11,3 +11,13 @@ enum class SortType(
     ASC("asc"),
     DESC("desc"),
 }
+
+fun String.sortClause(): SortClause? {
+
+    val field = substringBefore('[').field
+    val sortType = substringBefore(']').substringAfter('[').sortType
+    return sortType?.let { field?.let { it1 -> SortClause(it1, it) } }
+}
+
+val String.sortType: SortType?
+    get() = SortType.entries.associateBy { it.domainName }[this]

@@ -23,9 +23,11 @@ class BandController {
     @Produces(MediaType.APPLICATION_XML)
     fun getBands(
         @QueryParam("filter")
-        filterList: List<String>
+        filterList: List<String>,
+        @QueryParam("sort")
+        sortClause: String?,
     ): Response {
-        val banditos = bandService.getBands(filterList)
+        val banditos = bandService.getBands(filterList, sortClause)
         return Response.ok().entity(banditos).build()
     }
 

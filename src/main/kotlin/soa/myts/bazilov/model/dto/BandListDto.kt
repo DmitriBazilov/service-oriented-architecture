@@ -5,10 +5,10 @@ import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlElement
 import jakarta.xml.bind.annotation.XmlRootElement
 
-@XmlRootElement(name = "bands")
+@XmlRootElement(name = "Response")
 @XmlAccessorType(XmlAccessType.FIELD)
 data class BandListDto(
 
-    @field:XmlElement(name = "band")
+    @field:XmlElement(name = "MusicBand")
     var bands: List<BandDto>? = null,
 )
