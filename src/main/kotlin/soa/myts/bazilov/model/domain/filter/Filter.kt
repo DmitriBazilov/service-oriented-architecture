@@ -1,8 +1,5 @@
 package soa.myts.bazilov.model.domain.filter
 
-import soa.myts.bazilov.model.domain.filter.field.Field
-import soa.myts.bazilov.model.domain.filter.field.Type
-import soa.myts.bazilov.model.domain.filter.field.field
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 

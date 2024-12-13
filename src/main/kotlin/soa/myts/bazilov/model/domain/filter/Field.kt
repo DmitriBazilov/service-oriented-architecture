@@ -1,4 +1,4 @@
-package soa.myts.bazilov.model.domain.filter.field
+package soa.myts.bazilov.model.domain.filter
 
 enum class Type {
     INT,

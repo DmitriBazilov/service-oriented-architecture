@@ -11,8 +11,10 @@ import soa.myts.bazilov.model.domain.Band
 import soa.myts.bazilov.model.domain.MusicStudio
 import soa.myts.bazilov.model.domain.filter.Filter
 import soa.myts.bazilov.model.domain.filter.Operator
-import soa.myts.bazilov.model.domain.filter.field.Field
-import soa.myts.bazilov.model.domain.filter.field.Type
+import soa.myts.bazilov.model.domain.filter.Field
+import soa.myts.bazilov.model.domain.filter.SortClause
+import soa.myts.bazilov.model.domain.filter.SortType
+import soa.myts.bazilov.model.domain.filter.Type
 import java.time.LocalDate
 
 @ApplicationScoped
@@ -40,10 +42,9 @@ class BandRepository {
         }
     }
 
-    fun getBands(filters: List<Filter>): List<Band> {
+    fun getBands(filters: List<Filter>, sortClause: SortClause = SortClause(Field.Id, SortType.ASC)): List<Band> {
         val session = databaseSessionManager.getSession()
         try {
-            //todo codegen and getting
             session.beginTransaction()
             val criteriaBuilder = session.criteriaBuilder
             var criteriaQuery = criteriaBuilder.createQuery(Band::class.java)
