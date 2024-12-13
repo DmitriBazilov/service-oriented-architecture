@@ -3,11 +3,13 @@ package soa.myts.bazilov.repository
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.Order
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import org.hibernate.Session
 import soa.myts.bazilov.configuration.DatabaseSessionManager
 import soa.myts.bazilov.model.domain.Band
+import soa.myts.bazilov.model.domain.MusicGenre
 import soa.myts.bazilov.model.domain.MusicStudio
 import soa.myts.bazilov.model.domain.filter.Filter
 import soa.myts.bazilov.model.domain.filter.Operator
@@ -48,9 +50,26 @@ class BandRepository {
             session.beginTransaction()
             val criteriaBuilder = session.criteriaBuilder
             var criteriaQuery = criteriaBuilder.createQuery(Band::class.java)
-//            criteriaQuery.orderBy(sortClause.toOrder())
             val root = criteriaQuery.from(Band::class.java)
             val join = root.join(MusicStudio::class.java)
+            val orderName = sortClause.field.dbName.split(".").last()
+            val order = when (sortClause.field) {
+                Field.X, Field.Y -> sortClause.toOrder(
+                    criteriaBuilder,
+                    root.get<Any>(sortClause.field.dbName.split(".")[0]),
+                    orderName,
+                )
+                Field.StudioName, Field.StudioAddress -> sortClause.toOrder(
+                    criteriaBuilder,
+                    join,
+                    orderName
+                )
+                else -> sortClause.toOrder(
+                    criteriaBuilder,
+                    root,
+                    orderName,
+                )
+            }
             val predicates = filters.map { filter ->
                 val name = filter.field.dbName.split(".").last()
                 return@map when (filter.field) {
@@ -63,9 +82,9 @@ class BandRepository {
                     else -> filter.toPredicate(criteriaBuilder, root, name)
                 }
             }
-
             println(predicates)
             val whereClause = criteriaBuilder.and(*predicates.toTypedArray())
+            criteriaQuery.orderBy(order)
             criteriaQuery = criteriaQuery.where(whereClause)
 
             return session.createQuery(criteriaQuery).resultList
@@ -89,6 +108,7 @@ fun Filter.toPredicate(cb: CriteriaBuilder, root: Path<*>, name: String) = when 
     Type.DOUBLE -> toPredicateDouble(cb, root, name)
     Type.STRING -> toPredicateString(cb, root, name)
     Type.LOCAL_DATE -> toPredicateDate(cb, root, name)
+    Type.MUSIC_GENRE -> toPredicateMusicGenre(cb, root, name)
 }
 
 private fun Filter.toPredicateInt(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
@@ -127,6 +147,18 @@ private fun Filter.toPredicateString(cb: CriteriaBuilder, root: Path<*>, name: S
     }
 }
 
+private fun Filter.toPredicateMusicGenre(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
+    return when (this.operator) {
+        Operator.EQ -> cb.equal(root.get<MusicGenre>(name), this.value)
+        Operator.NEQ -> cb.notEqual(root.get<MusicGenre>(name), this.value)
+        Operator.LT -> cb.lessThan(root.get(name), this.value as MusicGenre)
+        Operator.LTE -> cb.lessThanOrEqualTo(root.get(name), this.value as MusicGenre)
+        Operator.GT -> cb.greaterThan(root.get(name), this.value as MusicGenre)
+        Operator.GTE -> cb.greaterThanOrEqualTo(root.get(name), this.value as MusicGenre)
+        Operator.LIKE -> null
+    }
+}
+
 private fun Filter.toPredicateDouble(cb: CriteriaBuilder, root: Path<*>, name: String): Predicate? {
     return when (this.operator) {
         Operator.EQ -> cb.equal(root.get<Double>(name), this.value)
@@ -151,6 +183,9 @@ private fun Filter.toPredicateDate(cb: CriteriaBuilder, root: Path<*>, name: Str
     }
 }
 
-private fun SortClause.toOrder(cb: CriteriaBuilder, root: Path<*>) {
-
+private fun SortClause.toOrder(cb: CriteriaBuilder, root: Path<*>, name: String): Order? {
+    return when (this.sortType) {
+        SortType.ASC -> cb.asc(root.get<Any>(name))
+        SortType.DESC -> cb.desc(root.get<Any>(name))
+    }
 }

@@ -6,6 +6,7 @@ enum class Type {
     DOUBLE,
     STRING,
     LOCAL_DATE,
+    MUSIC_GENRE,
 }
 
 sealed interface Field {
@@ -64,7 +65,7 @@ sealed interface Field {
     data object Genre : Field {
         override val dbName: String = "genre"
         override val domainName: String = "genre"
-        override val valueType: Type = Type.STRING
+        override val valueType: Type = Type.MUSIC_GENRE
     }
 
     data object StudioName : Field {

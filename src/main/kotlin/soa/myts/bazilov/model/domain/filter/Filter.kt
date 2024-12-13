@@ -1,5 +1,6 @@
 package soa.myts.bazilov.model.domain.filter
 
+import soa.myts.bazilov.model.domain.MusicGenre
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
@@ -29,6 +30,7 @@ fun String.parse(type: Type): Any? = when (type) {
     Type.DOUBLE -> this.toDoubleOrNull()
     Type.STRING -> this
     Type.LOCAL_DATE -> this.toLocalDateOrNull()
+    Type.MUSIC_GENRE -> MusicGenre.valueOf(this)
 }
 
 fun String.toLocalDateOrNull(): LocalDate? =
