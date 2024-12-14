@@ -12,14 +12,17 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import jakarta.ws.rs.core.Response.Status
 import soa.myts.bazilov.model.domain.MusicGenre
 import soa.myts.bazilov.model.domain.filter.Field
 import soa.myts.bazilov.model.domain.filter.Filter
 import soa.myts.bazilov.model.domain.filter.Operator
 import soa.myts.bazilov.model.domain.toDto
 import soa.myts.bazilov.model.dto.BandDto
+import soa.myts.bazilov.model.dto.WebException
 import soa.myts.bazilov.model.dto.toDomain
 import soa.myts.bazilov.service.BandService
+import soa.myts.bazilov.model.dto.Response as ResponseDto
 
 @Path("/bands")
 class BandController {
@@ -39,6 +42,12 @@ class BandController {
         @QueryParam("size")
         size: Int?,
     ): Response {
+        page?.let {
+            if (it < 1) return Response.status(400).entity(ResponseDto("negative page number")).build()
+        }
+        size?.let {
+            if (it < 1) return Response.status(400).entity(ResponseDto("negative page size")).build()
+        }
         val banditos = bandService.getBands(filterList, sortClause, page ?: 1, size ?: 10)
         return Response.ok().entity(banditos).build()
     }
@@ -59,7 +68,7 @@ class BandController {
     ): Response {
         val cnt = bandService.deleteById(id)
         if (cnt == 0) {
-            return Response.status(400).entity("not found band with id $id").build()
+            throw WebException(ResponseDto("not found band with id = $id"), Status.NOT_FOUND)
         }
         return Response.ok().build()
     }
@@ -73,7 +82,7 @@ class BandController {
         val band = bandService.findById(id)
         val response = band?.let {
             Response.ok().entity(it).build()
-        } ?: Response.status(400).entity("not found band with id $id").build()
+        } ?: throw WebException(ResponseDto("not found band with id = $id"), Status.NOT_FOUND)
         return response
     }
 
@@ -83,6 +92,7 @@ class BandController {
         @PathParam("name-substr")
         nameSubstring: String
     ): Response {
+        if (nameSubstring.isEmpty()) throw WebException(ResponseDto("substr can not be empty"), Status.BAD_REQUEST)
         val bands = bandService.findByNameSubstring(nameSubstring)
         return Response.ok().entity(bands).build()
     }
@@ -108,8 +118,9 @@ class BandController {
     ): Response {
         band.id = bandId
         val updatedBand = bandService.update(bandId, band.toDomain())
+            ?: throw WebException(ResponseDto("not found band with id = $bandId"), Status.NOT_FOUND)
         return Response.ok().entity(
-            updatedBand?.toDto() ?: "not found band with id $bandId"
+            updatedBand.toDto()
         ).build()
     }
 
@@ -120,7 +131,7 @@ class BandController {
     ): Response {
         val cnt = bandService.deleteByStudioId(studioId)
         if (cnt == 0) {
-            return Response.status(400).entity("not found band with studioId $studioId").build()
+            throw WebException(ResponseDto("not found band with studioId $studioId"), Status.NOT_FOUND)
         }
         return Response.ok().build()
     }

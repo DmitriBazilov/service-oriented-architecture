@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.Order
 import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
+import jakarta.ws.rs.core.Response.Status
 import org.hibernate.Session
 import soa.myts.bazilov.configuration.DatabaseSessionManager
 import soa.myts.bazilov.model.domain.Band
@@ -18,6 +19,8 @@ import soa.myts.bazilov.model.domain.filter.Operator
 import soa.myts.bazilov.model.domain.filter.SortClause
 import soa.myts.bazilov.model.domain.filter.SortType
 import soa.myts.bazilov.model.domain.filter.Type
+import soa.myts.bazilov.model.dto.Response
+import soa.myts.bazilov.model.dto.WebException
 import java.time.LocalDate
 
 @ApplicationScoped
@@ -39,7 +42,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             databaseSessionManager.closeSession(session)
         }
@@ -73,7 +76,7 @@ class BandRepository {
             }
             val predicates = filters.map { filter ->
                 val name = filter.field.dbName.split(".").last()
-                return@map when (filter.field) {
+                val predicate = when (filter.field) {
                     is Field.X, Field.Y -> filter.toPredicate(
                         criteriaBuilder,
                         root.get<Any>(filter.field.dbName.split(".")[0]),
@@ -82,8 +85,11 @@ class BandRepository {
                     is Field.StudioName, Field.StudioAddress -> filter.toPredicate(criteriaBuilder, join, name)
                     else -> filter.toPredicate(criteriaBuilder, root, name)
                 }
+                if (predicate == null) {
+                    throw WebException(Response("unsupported operator ${filter.operator.domainOp} for type ${filter.field.valueType}"), Status.BAD_REQUEST)
+                }
+                return@map predicate
             }
-            println(predicates)
             val whereClause = criteriaBuilder.and(*predicates.toTypedArray())
             criteriaQuery.orderBy(order)
             criteriaQuery = criteriaQuery.where(whereClause)
@@ -99,7 +105,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             if (session.isOpen) {
                 databaseSessionManager.closeSession(session)
@@ -121,7 +127,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             if (session.isOpen) {
                 databaseSessionManager.closeSession(session)
@@ -143,7 +149,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             if (session.isOpen) {
                 databaseSessionManager.closeSession(session)
@@ -164,7 +170,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             if (session.isOpen) {
                 databaseSessionManager.closeSession(session)
@@ -184,7 +190,7 @@ class BandRepository {
             if (session.transaction.isActive) {
                 session.transaction.rollback()
             }
-            throw e
+            throw WebException(Response("internal server error"), Status.INTERNAL_SERVER_ERROR)
         } finally {
             if (session.isOpen) {
                 databaseSessionManager.closeSession(session)
