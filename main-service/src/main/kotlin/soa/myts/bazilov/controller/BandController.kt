@@ -120,6 +120,20 @@ class BandController {
         }
         return Response.ok().build()
     }
+
+    @POST
+    @Path("participant/{id}")
+    fun removeParticipant(
+        @PathParam("id")
+        id: Int
+    ): Response {
+        val status = bandService.removeParticipant(id)
+        return when (status) {
+            BandService.RemoveStatus.OK -> Response.ok().build()
+            BandService.RemoveStatus.NOT_FOUND -> Response.status(404).build()
+            BandService.RemoveStatus.NUMBER_OF_PARTICIPANTS_IS_ZERO -> Response.status(400).build()
+        }
+    }
 }
 
 /*

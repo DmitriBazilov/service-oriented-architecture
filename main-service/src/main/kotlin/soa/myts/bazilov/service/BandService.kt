@@ -14,7 +14,9 @@ import soa.myts.bazilov.model.domain.filter.sortClause
 import soa.myts.bazilov.model.domain.toDto
 import soa.myts.bazilov.model.dto.BandDto
 import soa.myts.bazilov.model.dto.BandListDto
+import soa.myts.bazilov.model.dto.toDomain
 import soa.myts.bazilov.repository.BandRepository
+import kotlin.time.Duration.Companion.seconds
 
 @ApplicationScoped
 class BandService {
@@ -79,5 +81,20 @@ class BandService {
 
     fun deleteByStudioId(studioId: Int): Int {
         return bandRepository.deleteByStudioId(studioId)
+    }
+
+    fun removeParticipant(id: Int): RemoveStatus {
+        val band = findById(id) ?: return RemoveStatus.NOT_FOUND
+        band.numberOfParticipants = --band.numberOfParticipants
+        if (band.numberOfParticipants < 0) return RemoveStatus.NUMBER_OF_PARTICIPANTS_IS_ZERO
+        val domain = band.toDomain()
+        bandRepository.update(id, domain)
+        return RemoveStatus.OK
+    }
+
+    enum class RemoveStatus {
+        OK,
+        NOT_FOUND,
+        NUMBER_OF_PARTICIPANTS_IS_ZERO
     }
 }
