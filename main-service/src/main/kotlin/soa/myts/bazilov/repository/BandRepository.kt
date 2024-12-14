@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Predicate
 import org.hibernate.Session
 import soa.myts.bazilov.configuration.DatabaseSessionManager
 import soa.myts.bazilov.model.domain.Band
+import soa.myts.bazilov.model.domain.LimitOffset
 import soa.myts.bazilov.model.domain.MusicGenre
 import soa.myts.bazilov.model.domain.MusicStudio
 import soa.myts.bazilov.model.domain.filter.Field
@@ -44,7 +45,7 @@ class BandRepository {
         }
     }
 
-    fun getBands(filters: List<Filter>, sortClause: SortClause): List<Band> {
+    fun getBands(filters: List<Filter>, sortClause: SortClause, limitOffset: LimitOffset?): List<Band> {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -87,7 +88,12 @@ class BandRepository {
             criteriaQuery.orderBy(order)
             criteriaQuery = criteriaQuery.where(whereClause)
 
-            return session.createQuery(criteriaQuery).resultList
+            val query = session.createQuery(criteriaQuery)
+            limitOffset?.let {
+                query.firstResult = it.offset
+                query.maxResults = it.limit
+            }
+            return query.resultList
         } catch (e: Exception) {
             e.printStackTrace()
             if (session.transaction.isActive) {

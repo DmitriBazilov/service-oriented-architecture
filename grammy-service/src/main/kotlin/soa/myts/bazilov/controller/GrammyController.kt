@@ -41,11 +41,7 @@ class GrammyController {
             .target("$MAIN_BAND_SERVICE_URL/best-group")
             .request(MediaType.APPLICATION_XML)
             .post(Entity.xml(bestGroupDto))
-    }
 
-    @GET
-    fun test(): Response {
-        return Response.ok().build()
     }
 
     companion object {

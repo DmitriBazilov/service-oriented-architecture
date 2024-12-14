@@ -3,6 +3,7 @@ package soa.myts.bazilov.service
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import soa.myts.bazilov.model.domain.Band
+import soa.myts.bazilov.model.domain.LimitOffset
 import soa.myts.bazilov.model.domain.MusicGenre
 import soa.myts.bazilov.model.domain.filter.Field
 import soa.myts.bazilov.model.domain.filter.Filter
@@ -27,6 +28,8 @@ class BandService {
     fun getBands(
         filters: List<String> = emptyList(),
         sortClause: String? = null,
+        page: Int = 1,
+        size: Int = 10,
     ): BandListDto {
         val domainFilters = filters.map { it.filter() }
         val domainSortClause = sortClause?.sortClause()
@@ -34,7 +37,8 @@ class BandService {
         return BandListDto(
             bandRepository.getBands(
                 domainFilters,
-                domainSortClause ?: SortClause(Field.Id, SortType.ASC)
+                domainSortClause ?: SortClause(Field.Id, SortType.ASC),
+                LimitOffset(size, (page - 1) * size)
             ).map {
                 it.toDto()
             }
@@ -60,7 +64,8 @@ class BandService {
         return BandListDto(
             bandRepository.getBands(
                 listOf(filter),
-                SortClause(Field.Id, SortType.ASC)
+                SortClause(Field.Id, SortType.ASC),
+                null,
             ). map { it.toDto() }
         )
     }
@@ -70,7 +75,8 @@ class BandService {
         return BandListDto(
             bandRepository.getBands(
                 listOf(filter),
-                SortClause(Field.Id, SortType.ASC)
+                SortClause(Field.Id, SortType.ASC),
+                null,
             ). map { it.toDto() }
         )
     }

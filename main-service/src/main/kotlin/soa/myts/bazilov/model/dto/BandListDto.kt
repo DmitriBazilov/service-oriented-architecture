@@ -11,4 +11,10 @@ data class BandListDto(
 
     @field:XmlElement(name = "MusicBand")
     var bands: List<BandDto>? = null,
+
+    var pageSize: Int? = null,
+
+    var curentPage: Int? = null,
+
+    var totalPages: Int? = null,
 )
