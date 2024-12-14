@@ -35,11 +35,11 @@ class BandController {
         @QueryParam("sort")
         sortClause: String?,
         @QueryParam("page")
-        page: Int,
+        page: Int?,
         @QueryParam("size")
-        size: Int,
+        size: Int?,
     ): Response {
-        val banditos = bandService.getBands(filterList, sortClause, page, size)
+        val banditos = bandService.getBands(filterList, sortClause, page ?: 1, size ?: 10)
         return Response.ok().entity(banditos).build()
     }
 
