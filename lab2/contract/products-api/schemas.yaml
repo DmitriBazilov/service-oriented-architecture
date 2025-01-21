@@ -1,0 +1,206 @@
+components:
+  schemas:
+    CreateUpdateProductRequestTo:
+      type: object
+      properties:
+        name:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesTo'
+        price:
+          type: integer
+          format: int64
+          minimum: 1
+        partNumber:
+          type: string
+          minLength: 10
+        manufacturerCost:
+          type: integer
+          format: int64
+          minimum: 1
+        unitOfMeasure:
+          $ref: '#/components/schemas/UnitOfMeasureTo'
+        ownerPassportId:
+          type: string
+          maxLength: 44
+      required:
+        - name
+        - coordinates
+        - price
+        - manufacturerCost
+        - unitOfMeasure
+
+    CreatePersonRequestTo:
+      type: object
+      properties:
+        name:
+          type: string
+        passportID:
+          type: string
+          maxLength: 44
+        eyeColor:
+          $ref: '#/components/schemas/ColorTo'
+        hairColor:
+          $ref: '#/components/schemas/ColorTo'
+      required:
+        - name
+        - passportID
+
+    CreateProductResponseTo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+      required:
+        - id
+
+    CreatePersonResponseTo:
+      type: object
+      properties:
+        passportID:
+          type: string
+          maxLength: 44
+      required:
+        - passportID
+
+    ProductTo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesTo'
+        createdDate:
+          type: date
+        price:
+          type: integer
+          format: int64
+        partNumber:
+          type: string
+        manufacturerCost:
+          type: integer
+          format: int64
+        unitOfMeasure:
+          $ref: '#/components/schemas/UnitOfMeasureTo'
+        owner:
+          $ref: '#/components/schemas/PersonTo'
+      required:
+        - id
+        - name
+        - coordinates
+        - createdDate
+        - price
+        - manufacturerCost
+        - unitOfMeasure
+
+    CoordinatesTo:
+      type: object
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+      required:
+        - x
+        - y
+
+    PersonTo:
+      type: object
+      properties:
+        name:
+          type: string
+        passportID:
+          type: string
+          maxLength: 44
+        eyeColor:
+          $ref: '#/components/schemas/ColorTo'
+        hairColor:
+          $ref: '#/components/schemas/ColorTo'
+      required:
+        - name
+        - passportID
+
+    UnitOfMeasureTo:
+      type: string
+      enum:
+        - KILOGRAMS
+        - METERS
+        - MILLILITERS
+        - MILLIGRAMS
+
+    PriceOperationTo:
+      type: string
+      enum:
+        - INCREASE
+        - DECREASE
+
+    ColorTo:
+      type: string
+      enum:
+        - YELLOW
+        - WHITE
+        - BROWN
+        - GREEN
+        - RED
+        - BLACK
+        - ORANGE
+
+    CriteriaTo:
+      type: string
+      enum:
+        - ID
+        - NAME
+        - COORDINATES
+        - CREATION_DATE
+        - PRICE
+        - PART_NUMBER
+        - MANUFACTURER_COST
+        - UNIT_OF_MEASURE
+        - OWNER_PASSPORT_ID
+
+    SortTypeTo:
+      type: string
+      enum:
+        - ASC
+        - DESC
+
+    FilterOperatorTo:
+      type: string
+      enum:
+        - EQUAL
+        - LESS
+        - GREATER
+        - LESS_OR_EQUAL
+        - GREATER_OR_EQUAL
+        - SAME
+
+    ProductPriceSumTo:
+      type: object
+      required: [ sum ]
+      properties:
+        sum:
+          type: number
+
+    ApiErrorTo:
+      type: object
+      required: [ timestamp ]
+      properties:
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    CreatePerson409ErrorTo:
+      type: object
+      required: [ passportID, timestamp ]
+      properties:
+        passportID:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string

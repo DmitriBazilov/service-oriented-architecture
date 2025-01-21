@@ -1,0 +1,38 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@soa2-front/ebay-decrease": ["libs/ebay-decrease/src/index.ts"],
+      "@soa2-front/ebay-increase": ["libs/ebay-increase/src/index.ts"],
+      "@soa2-front/ebay-page": ["libs/ebay-page/src/index.ts"],
+      "@soa2-front/persons-page": ["libs/persons-page/src/index.ts"],
+      "@soa2-front/product-by-id": ["libs/product-by-id/src/index.ts"],
+      "@soa2-front/product-edit": ["libs/product-edit/src/index.ts"],
+      "@soa2-front/product-min": ["libs/product-min/src/index.ts"],
+      "@soa2-front/product-view": ["libs/product-view/src/index.ts"],
+      "@soa2-front/products-less-than": [
+        "libs/products-less-than/src/index.ts"
+      ],
+      "@soa2-front/products-page": ["libs/products-page/src/index.ts"],
+      "@soa2-front/products-price-sum": [
+        "libs/products-price-sum/src/index.ts"
+      ],
+      "@soa2-front/products-table": ["libs/products-table/src/index.ts"],
+      "@soa2-front/shared": ["libs/shared/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

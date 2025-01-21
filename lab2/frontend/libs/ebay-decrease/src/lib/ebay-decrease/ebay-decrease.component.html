@@ -1,0 +1,25 @@
+<div class="container">
+    <h3>Уменьшить стоимость всех продуктов на процент</h3>
+    <div class="row">
+        <tui-input-number 
+            [formControl]="percentControl"
+            [min]="0"
+            [step]="1"
+            tuiTextfieldPostfix="%"
+        >
+            Введите процент
+            <input
+                tuiTextfieldLegacy
+            />
+        </tui-input-number>
+    </div>
+    <div class="button-container">
+        <button 
+            tuiButton
+            size="m"
+            (click)="decrease()"
+        >
+            Уменьшить
+        </button>
+    </div>
+</div>

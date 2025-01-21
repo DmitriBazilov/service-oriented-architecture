@@ -1,0 +1,97 @@
+components:
+  parameters:
+    PriceOperationParameter:
+      name: priceOperation
+      in: query
+      required: true
+      schema:
+        $ref: 'schemas.yaml#/components/schemas/PriceOperationTo'
+
+    PercentParameter:
+      name: percent
+      in: query
+      required: true
+      schema:
+        minimum: 0
+        type: number
+
+    IdParameter:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+
+    PageParameter:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Page number for pagination
+
+    SizeParameter:
+      name: size
+      in: query
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 500
+      description: Number of items per page
+
+    SortCriteriaListParameter:
+      name: sortCriteriaList
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'schemas.yaml#/components/schemas/CriteriaTo'
+      description: Sorting criteria list (e.g., 'NAME,PRICE'), !WARNING! COORDINATES CRITERIA ARE NOT AVAILABLE FOR SORTING
+
+    SortTypeListParameter:
+      name: sortTypeList
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'schemas.yaml#/components/schemas/SortTypeTo'
+      description: Sorting type list (e.g., 'ACS,DESC')
+
+    FilterCriteriaListParameter:
+      name: filterCriteriaList
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'schemas.yaml#/components/schemas/CriteriaTo'
+      description: Filtering criteria (e.g., 'UNIT_OF_MEASURE,COORDINATES'), order have to be in sync with FilterOperatorsParameter and FilterValuesParameter!
+
+    FilterOperatorsParameter:
+      name: filterOperators
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: 'schemas.yaml#/components/schemas/FilterOperatorTo'
+      description: Filtering criteria (e.g., 'EQUAL,SAME'), order have to be in sync with FilterCriteriaListParameter and FilterValuesParameter!
+
+    FilterValuesParameter:
+      name: filterValues
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      description: Filtering values (e.g, 'KILOGRAMS,1.14:2.1'), order have to be in sync with FilterCriteriaListParameter and FilterOperatorsParameter!
+
+    CostParameter:
+      name: cost
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64

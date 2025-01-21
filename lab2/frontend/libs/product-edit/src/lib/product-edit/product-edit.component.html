@@ -1,0 +1,84 @@
+<form [formGroup]="productForm">
+    <div class="row">
+        <tui-input formControlName="name">
+            Название продукта
+            <input
+                tuiTextfieldLegacy
+            />
+        </tui-input>
+    </div>
+    <div class="row">
+        <tui-input-number 
+            formControlName="coordinateX"
+            [step]=1
+            [tuiNumberFormat]="{precision: 0}"
+        >
+            Координата X
+        </tui-input-number>
+    </div>
+    <div class="row">
+        <tui-input-number 
+            formControlName="coordinateY"
+            [step]="1"
+            [tuiNumberFormat]="{precision: 0}"
+        >
+            Координата Y
+        </tui-input-number>
+    </div>
+    <div class="row">
+        <tui-input-number 
+            formControlName="price"
+            [min]="1"
+            [step]="1"
+            [tuiNumberFormat]="{precision: 0}"
+        >
+            Цена
+        </tui-input-number>
+    </div>
+    <div class="row">
+        <tui-input formControlName="partNumber">
+            Артикул
+            <input
+                tuiTextfieldLegacy
+            />
+        </tui-input>
+    </div>
+    <div class="row">
+        <tui-input-number 
+            formControlName="manufactureCost"
+            [min]="1"
+            [step]=1
+            [tuiNumberFormat]="{precision: 0}"
+        >
+            Стоимость производства
+        </tui-input-number>
+    </div>
+    <div class="row">
+        <tui-select formControlName="unitOfMeasure">
+            Мера
+            <tui-data-list-wrapper
+                *tuiDataList
+                [items]="unitsOfMeasure"
+            ></tui-data-list-wrapper>
+        </tui-select>
+    </div>
+    <div class="row">
+        <tui-input formControlName="personPassportId">
+            Номер паспорта владельца
+            <input
+                tuiTextfieldLegacy
+            />
+        </tui-input>
+    </div>
+    <div class="row button-container">
+        <button 
+            tuiButton
+            size="m"
+            appearance="accent"
+            [disabled]="!productForm.valid"
+            (click)="updateProduct()"
+        >
+            Отправить форму
+        </button>
+    </div>
+</form>

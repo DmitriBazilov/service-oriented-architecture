@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  title: soa-products
+  description: Product Management API
+  version: 1.0.0
+
+tags:
+  - name: product
+  - name: person
+
+servers:
+  - url: /api
+
+paths:
+  /persons:
+    post:
+      operationId: createPerson
+      tags: [ person ]
+      summary: Create a new person
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/CreatePersonRequestTo'
+      responses:
+        201:
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/CreatePersonResponseTo'
+        400:
+          description: Invalid request body params
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        409:
+          description: Person with given passportId already exists
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/CreatePerson409ErrorTo'
+
+  /products/prices:
+    put:
+      operationId: updatePricesOfAllProducts
+      tags: [ product ]
+      summary: Update prices
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/PriceOperationParameter'
+        - $ref: 'parameters.yaml#/components/parameters/PercentParameter'
+      responses:
+        200:
+          description: Prices increased successfully
+        400:
+          description: Invalid params provided (e.g. negative percent)
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+  /products:
+    get:
+      operationId: getProducts
+      tags: [ product ]
+      summary: Get all products with optional sorting, filtering, and pagination
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/PageParameter'
+        - $ref: 'parameters.yaml#/components/parameters/SizeParameter'
+        - $ref: 'parameters.yaml#/components/parameters/SortCriteriaListParameter'
+        - $ref: 'parameters.yaml#/components/parameters/SortTypeListParameter'
+        - $ref: 'parameters.yaml#/components/parameters/FilterCriteriaListParameter'
+        - $ref: 'parameters.yaml#/components/parameters/FilterOperatorsParameter'
+        - $ref: 'parameters.yaml#/components/parameters/FilterValuesParameter'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas.yaml#/components/schemas/ProductTo'
+        400:
+          description: Invalid parameters provided (e.g. negative size, page)
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+    post:
+      operationId: createProduct
+      tags: [ product ]
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/CreateUpdateProductRequestTo'
+      responses:
+        201:
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/CreateProductResponseTo'
+        400:
+          description: Invalid request body params (e.g. negative price)
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        404:
+          description: Owner not found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        409:
+          description: Product with given partNumber already exists
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+  /products/{id}:
+    get:
+      operationId: getProductById
+      tags: [ product ]
+      summary: Get a product by ID
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/IdParameter'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ProductTo'
+        400:
+          description: Invalid id provided
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        404:
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+    put:
+      operationId: updateProductById
+      tags: [ product ]
+      summary: Update a product by ID
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/IdParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas.yaml#/components/schemas/CreateUpdateProductRequestTo'
+      responses:
+        200:
+          description: Product updated
+        400:
+          description: Invalid id provided
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        404:
+          description: Property not found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+    delete:
+      operationId: deleteProductById
+      tags: [ product ]
+      summary: Delete a product by ID
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/IdParameter'
+      responses:
+        204:
+          description: Product deleted
+        400:
+          description: Negative id provided
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+        404:
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+  /products/price/sum:
+    get:
+      operationId: getAllProductPricesSum
+      tags: [ product ]
+      summary: Calculate the sum of prices for all products
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ProductPriceSumTo'
+
+  /products/part-number/min:
+    get:
+      operationId: getMinPartNumberProduct
+      tags: [ product ]
+      summary: Get a product with the minimum partNumber
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ProductTo'
+        404:
+          description: No product found with partNumber
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'
+
+  /products/manufacture-cost/less-than:
+    get:
+      operationId: getProductsWithManufacturerCostLessThan
+      tags: [ product ]
+      summary: Get products with manufacturerCost less than a specified value with pagination
+      parameters:
+        - $ref: 'parameters.yaml#/components/parameters/CostParameter'
+        - $ref: 'parameters.yaml#/components/parameters/PageParameter'
+        - $ref: 'parameters.yaml#/components/parameters/SizeParameter'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas.yaml#/components/schemas/ProductTo'
+        400:
+          description: Invalid parameters provided (e.g. negative cost, size, page)
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yaml#/components/schemas/ApiErrorTo'

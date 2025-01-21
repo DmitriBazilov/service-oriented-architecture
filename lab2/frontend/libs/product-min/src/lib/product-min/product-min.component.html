@@ -1,0 +1,20 @@
+<div class="container">
+    <h3>Минимальный продукт</h3>
+    <div class="button-container">
+        <button 
+            tuiButton
+            size="m"
+            (click)="getMinimal(productView)"
+        >
+            Получить
+        </button>
+    </div>
+</div>
+
+<ng-template #productView>
+    @if (minimalProduct$ | async; as minimalProduct) {
+        <lib-product-view 
+            [product]="minimalProduct">
+        </lib-product-view>
+    }
+</ng-template>

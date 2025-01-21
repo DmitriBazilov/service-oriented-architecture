@@ -1,0 +1,72 @@
+<div class="header">
+    <h2>Персоны</h2>
+    <button 
+        tuiButton
+        size="s"
+        appearance="accent"
+        (click)="openCreateForm(createPerson)"
+    >
+        Зарегистрировать человека
+    </button>
+</div>
+
+@if (funToggle$ | async) {
+    <img class="casino-1" src="https://depositbonuscasino.net/img/banner.png" alt="My Image">
+}
+
+@if (funToggle$ | async) {
+    <img class="casino-2" src="https://rusinfo.info/wp-content/uploads/a/4/e/a4ebaa375961ba387e9f40d6b905e17a.jpg" alt="My Image">
+}
+
+<ng-template #createPerson let-observer>
+    <form [formGroup]="personForm">
+        <div class="row">
+            <tui-input formControlName="name">
+                Введите имя
+                <input
+                    tuiTextfieldLegacy
+                />
+            </tui-input>
+        </div>
+        <div class="row">
+            <tui-input 
+                formControlName="passportId"
+                [maxlength]="44"
+            >
+                Введите номер паспорта
+                <input
+                    tuiTextfieldLegacy
+                />
+            </tui-input>
+        </div>
+        <div class="row">
+            <tui-select formControlName="eyeColor">
+                Цвет глаз
+                <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="colors"
+                ></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="row">
+            <tui-select formControlName="hairColor">
+                Цвет волос
+                <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="colors"
+                ></tui-data-list-wrapper>
+            </tui-select>
+        </div>
+        <div class="row button-container">
+            <button 
+                tuiButton
+                size="m"
+                appearance="accent"
+                [disabled]="!personForm.valid"
+                (click)="submitForm(observer)"
+            >
+                Отправить форму
+            </button>
+        </div>
+    </form>
+</ng-template>

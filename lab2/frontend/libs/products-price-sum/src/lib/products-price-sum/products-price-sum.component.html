@@ -1,0 +1,19 @@
+<div class="container">
+    <h3>Сумма всех продуктов</h3>
+    <p>
+        @if (sum$ | async; as sum) {
+            {{ sum.sum }}
+        } @else {
+            -
+        }
+    </p>
+    <div class="button-container">
+        <button 
+            tuiButton
+            size="m"
+            (click)="reload()"
+        >
+            Обновить сумму цен
+        </button>
+    </div>
+</div>

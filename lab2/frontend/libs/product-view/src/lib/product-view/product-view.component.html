@@ -1,0 +1,13 @@
+@if (product(); as product) {
+    <p>ID: {{ product.id }}</p>
+    <p>Название: {{ product.name || "" }}</p>
+    <p>Цена: {{ product.price }}</p>
+    <p>Артикул: {{ product.partNumber }}</p>
+    <p>Координаты: ({{ product.coordinates.x}}, {{product.coordinates.y}})</p>
+    <p>Цена производства: {{ product.manufacturerCost }}</p>
+    @if (product.owner) {
+        <p>Владелец: {{ product.owner.name }} ({{ product.owner.passportID }})</p>
+    }
+    <p>Единицы измерения: {{ product.unitOfMeasure }}</p>
+    <p>Дата создания: {{ product.createdDate }}</p>
+}

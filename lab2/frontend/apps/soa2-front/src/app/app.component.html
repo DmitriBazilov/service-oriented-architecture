@@ -1,0 +1,57 @@
+<tui-root>
+  <!-- content of your app -->
+  <h1 class="header">СОА лабораторная работа 2</h1>
+  <input
+    tuiSwitch
+    type="checkbox"
+    [formControl]="funControl"
+  />
+
+  <div class="tabs-container">
+      <tui-tabs>
+          <a
+              tuiTab
+              routerLink="/products"
+              routerLinkActive
+          >
+              Продукты
+          </a>
+          <a
+              tuiTab
+              routerLink="/persons"
+              routerLinkActive
+          >
+              Люди
+          </a>
+          <a
+              tuiTab
+              routerLink="/ebay"
+              routerLinkActive
+          >
+              Ebay
+          </a>
+      </tui-tabs>
+  </div>
+
+  <div class="app-container">
+      <router-outlet />
+  </div>
+  <!--
+     If you need, you can add something between Taiga portal layers:
+    -->
+  <ng-container ngProjectAs="tuiOverContent">
+    <!-- Content over app content -->
+  </ng-container>
+  <ng-container ngProjectAs="tuiOverDialogs">
+    <!-- Content over dialogs -->
+  </ng-container>
+  <ng-container ngProjectAs="tuiOverAlerts">
+    <!-- Content over alerts -->
+  </ng-container>
+  <ng-container ngProjectAs="tuiOverDropdowns">
+    <!-- Content over dropdowns -->
+  </ng-container>
+  <ng-container ngProjectAs="tuiOverHints">
+    <!-- Content over hints -->
+  </ng-container>
+</tui-root>

@@ -1,0 +1,98 @@
+{
+  "name": "soa2-front",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/soa2-front/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/soa2-front",
+        "index": "apps/soa2-front/src/index.html",
+        "browser": "apps/soa2-front/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/soa2-front/tsconfig.app.json",
+        "inlineStyleLanguage": "less",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "node_modules/@taiga-ui/icons/src",
+            "output": "assets/taiga-ui/icons"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/soa2-front/public"
+          }
+        ],
+        "styles": [
+          "@taiga-ui/core/styles/taiga-ui-theme.less",
+          "@taiga-ui/core/styles/taiga-ui-fonts.less",
+          "apps/soa2-front/src/styles.less"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "64kb",
+              "maximumError": "64kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "soa2-front:build:production"
+        },
+        "development": {
+          "buildTarget": "soa2-front:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "soa2-front:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/soa2-front/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "soa2-front:build",
+        "staticFilePath": "dist/apps/soa2-front/browser",
+        "spa": true
+      }
+    }
+  }
+}

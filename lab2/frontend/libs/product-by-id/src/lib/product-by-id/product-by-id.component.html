@@ -1,0 +1,53 @@
+<div class="container">
+    <h3>Продукт по ID</h3>
+    <div class="row">
+        <tui-input-number 
+            [formControl]="idControl"
+            [min]="1"
+        >
+            Введите ID
+            <input
+                tuiTextfieldLegacy
+            />
+        </tui-input-number>
+    </div>
+    <div class="button-container">
+        <div class="inner-container">
+            <button 
+                tuiButton
+                size="m"
+                (click)="getById()"
+            >
+                Получить
+            </button>
+            <button 
+                tuiButton
+                size="m"
+                (click)="deleteById()"
+            >
+                Удалить
+            </button>
+        </div>
+    </div>
+    @if (product$ | async; as product) {
+        <lib-product-view [product]="product"></lib-product-view>
+        <div class="edit-button-container">
+            <button 
+                tuiButton
+                size="m"
+                (click)="edit(productEdit)"
+            >
+                Редактировать
+            </button>
+        </div>
+    }
+</div>
+
+<ng-template #productEdit let-observer>
+    @if (product$ | async; as product) {
+        <lib-product-edit
+            [observer]="observer"
+            [product]="product">
+        </lib-product-edit>
+    }
+</ng-template>

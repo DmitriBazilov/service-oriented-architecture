@@ -1,0 +1,73 @@
+server:
+  port: 9912
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/soa.p12
+    key-store-password: 123456
+    key-alias: soa
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: DEBUG
+#    reactor.netty.http.client: DEBUG
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    ribbon:
+      eureka:
+        enabled: true
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      httpclient:
+        ssl:
+          use-insecure-trust-manager: true
+        connect-timeout: 1000
+        response-timeout: 5s
+      routes:
+        - id: soa-products
+          uri: lb:https://soa-products
+          predicates:
+            - Path=/products/**
+        - id: soa-persons
+          uri: lb:https://soa-products
+          predicates:
+            - Path=/persons/**
+        - id: soa-ebay-decrease
+          uri: lb:https://soa-products
+          predicates:
+            - Path=/price/decrease/{decreasePercent}
+          filters:
+            - RewritePath=/price/decrease/(?<decreasePercent>.*), /products/prices?percent=${decreasePercent}&priceOperation=DECREASE
+            - ConvertHttpMethod=PUT
+        - id: soa-ebay-increase
+          uri: lb:https://soa-products
+          predicates:
+            - Path=/price/increase/{increasePercent}
+          filters:
+            - RewritePath=/price/increase/(?<increasePercent>.*), /products/prices?percent=${increasePercent}&priceOperation=INCREASE
+            - ConvertHttpMethod=PUT
+
+soa-products:
+  ribbon:
+    IsSecure: true
+
+soa-ebay-increase:
+  ribbon:
+    IsSecure: true
+
+soa-ebay-decrease:
+  ribbon:
+    IsSecure: true

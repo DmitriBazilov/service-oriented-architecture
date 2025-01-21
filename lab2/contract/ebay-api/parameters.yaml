@@ -1,0 +1,19 @@
+components:
+  parameters:
+    IncreasePercentParameter:
+      name: increasePercent
+      in: path
+      required: true
+      schema:
+        minimum: 0
+        type: number
+
+
+    DecreasePercentParameter:
+      name: decreasePercent
+      in: path
+      required: true
+      schema:
+        minimum: 0
+        maximum: 100
+        type: number
