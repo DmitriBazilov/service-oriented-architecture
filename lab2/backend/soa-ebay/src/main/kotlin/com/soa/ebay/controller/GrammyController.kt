@@ -1,6 +1,5 @@
 package com.soa.ebay.controller
 
-import com.soa.ebay.logging.model.BestGroupDto
 import com.soa.ebay.model.BestGroupDto
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
