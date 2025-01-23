@@ -1,5 +1,6 @@
 package com.soa.products.ejb.service
 
+import com.soa.products.ejb.dao.BandRepository
 import com.soa.products.ejb.dao.BestGroupRepository
 import com.soa.products.ejb.domain.BestGroup
 import com.soa.products.ejb.exception.BandOperationException
@@ -17,11 +18,11 @@ open class BestGroupServiceImpl: BestGroupService {
     private lateinit var bestGroupRepository: BestGroupRepository
 
     @Inject
-    private lateinit var bandService: BandService
+    private lateinit var bandRepository: BandRepository
 
 
     override fun saveBestGroup(bestGroup: BestGroup): BestGroup {
-        bandService.findById(bestGroup.bandId)
+        bandRepository.findById(bestGroup.bandId)
             ?: throw BandOperationException.NotFoundBandException(
                 "Group with ${bestGroup.bandId} does not exists",
                 Response.Status.NOT_FOUND.statusCode,

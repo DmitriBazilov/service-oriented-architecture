@@ -7,17 +7,6 @@ import com.soa.products.domain.toDto
 import com.soa.products.ejb.domain.MusicGenre
 import com.soa.products.ejb.exception.BandOperationException
 import com.soa.products.ejb.service.BandService
-import jakarta.inject.Inject
-import jakarta.ws.rs.Consumes
-import jakarta.ws.rs.DELETE
-import jakarta.ws.rs.GET
-import jakarta.ws.rs.PATCH
-import jakarta.ws.rs.POST
-import jakarta.ws.rs.Path
-import jakarta.ws.rs.PathParam
-import jakarta.ws.rs.Produces
-import jakarta.ws.rs.QueryParam
-import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.Response.Status
 import org.springframework.http.ResponseEntity
@@ -30,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import kotlin.math.ceil
 
 @RestController
 @RequestMapping(
@@ -38,18 +28,18 @@ import org.springframework.web.bind.annotation.RestController
     consumes = ["application/xml"]
 )
 class BandController(
-    private val bandService: BandService
+    private val bandService: BandService,
 ) {
 
     @GetMapping
     fun getBands(
-        @RequestParam("filter")
-        filterList: List<String>,
-        @RequestParam("sort")
+        @RequestParam(name = "filter", required = false)
+        filterList: List<String>?,
+        @RequestParam(name = "sort", required = false)
         sortClause: String?,
-        @RequestParam("page")
+        @RequestParam(name = "page", required = false)
         page: Int?,
-        @RequestParam("size")
+        @RequestParam(name = "size", required = false)
         size: Int?,
     ): ResponseEntity<*> {
         page?.let {
@@ -58,36 +48,36 @@ class BandController(
         size?.let {
             if (it < 1) throw BandOperationException.BandOperationParamsException("negative page size", Status.BAD_REQUEST.statusCode)
         }
-        val banditos = bandService.getBands(filterList, sortClause, page ?: 1, size ?: 10).map { it.toDto() }
-        return ResponseEntity.ok(BandListDto(banditos, size, page, ))
+        val banditos = bandService.getBands(filterList ?: emptyList(), sortClause, page ?: 1, size ?: 10).map { it.toDto() }
+        return ResponseEntity.ok(BandListDto(banditos, size, page, ceil(banditos.size.toDouble() / (size ?: 10)).toInt()))
     }
 
     @PostMapping
-    fun saveBand(@RequestBody band: BandDto): Response {
+    fun saveBand(@RequestBody band: BandDto): ResponseEntity<*> {
         val resultBand = bandService.saveBand(band.toDomain())
-        return Response.ok().entity(resultBand).build()
+        return ResponseEntity.ok(resultBand.toDto())
     }
 
     @DeleteMapping("/{id}")
     fun deleteBand(
         @PathVariable("id")
         id: Int
-    ): Response {
+    ): ResponseEntity<Unit> {
         val cnt = bandService.deleteById(id)
         if (cnt == 0) {
             throw BandOperationException.NotFoundBandException("not found band with id = $id", Status.NOT_FOUND.statusCode)
         }
-        return Response.ok().build()
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/{band-id}")
     fun getById(
         @PathVariable("band-id")
         id: Int
-    ): Response {
+    ): ResponseEntity<*> {
         val band = bandService.findById(id)
         val response = band?.let {
-            Response.ok().entity(it).build()
+            ResponseEntity.ok(it.toDto())
         } ?: throw BandOperationException.NotFoundBandException("not found band with id = $id", Status.NOT_FOUND.statusCode)
         return response
     }
@@ -96,59 +86,57 @@ class BandController(
     fun getByNameSubstring(
         @PathVariable("name-substr")
         nameSubstring: String
-    ): Response {
+    ): ResponseEntity<*> {
         if (nameSubstring.isEmpty())
             throw BandOperationException.BandOperationParamsException("substr can not be empty", Status.BAD_REQUEST.statusCode)
-        val bands = bandService.findByNameSubstring(nameSubstring)
-        return Response.ok().entity(bands).build()
+        val bands = bandService.findByNameSubstring(nameSubstring).map { it.toDto() }
+        return ResponseEntity.ok(BandListDto(bands))
     }
 
     @GetMapping("/genre/count")
     fun getCountWhereGenreLower(
         @RequestParam("genre")
         genre: MusicGenre
-    ): Response {
+    ): ResponseEntity<*> {
         val bands = bandService.countGenres(genre).size
-        return Response.ok().entity(bands).build()
+        return ResponseEntity.ok(bands)
     }
 
     @PatchMapping("/{band-id}")
     fun update(
-        @RequestParam("band-id")
+        @PathVariable("band-id")
         bandId: Int,
         @RequestBody
         band: BandDto,
-    ): Response {
+    ): ResponseEntity<*> {
         band.id = bandId
         val updatedBand = bandService.update(bandId, band.toDomain())
             ?: throw BandOperationException.NotFoundBandException("not found band with id = $bandId", Status.NOT_FOUND.statusCode)
-        return Response.ok().entity(
-            updatedBand.toDto()
-        ).build()
+        return ResponseEntity.ok(updatedBand.toDto())
     }
 
     @DeleteMapping
     fun deleteByStudioId(
         @RequestParam("studioId")
         studioId: Int
-    ): Response {
+    ): ResponseEntity<Unit> {
         val cnt = bandService.deleteByStudioId(studioId)
         if (cnt == 0) {
             throw BandOperationException.NotFoundBandException("not found band with studioId $studioId", Status.NOT_FOUND.statusCode)
         }
-        return Response.ok().build()
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/participant/{id}")
     fun removeParticipant(
         @PathVariable("id")
         id: Int
-    ): Response {
+    ): ResponseEntity<Unit> {
         val status = bandService.removeParticipant(id)
         return when (status) {
-            BandService.RemoveStatus.OK -> Response.ok().build()
-            BandService.RemoveStatus.NOT_FOUND -> Response.status(404).build()
-            BandService.RemoveStatus.NUMBER_OF_PARTICIPANTS_IS_ZERO -> Response.status(400).build()
+            BandService.RemoveStatus.OK -> ResponseEntity.ok().build()
+            BandService.RemoveStatus.NOT_FOUND -> ResponseEntity.status(404).build()
+            BandService.RemoveStatus.NUMBER_OF_PARTICIPANTS_IS_ZERO -> ResponseEntity.status(400).build()
         }
     }
 }

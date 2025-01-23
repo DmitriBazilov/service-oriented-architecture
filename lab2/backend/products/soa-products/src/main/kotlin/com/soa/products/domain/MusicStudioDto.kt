@@ -1,12 +1,12 @@
 package com.soa.products.domain
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.soa.products.ejb.domain.MusicStudio
 import jakarta.xml.bind.annotation.XmlAccessType
 import jakarta.xml.bind.annotation.XmlAccessorType
 import jakarta.xml.bind.annotation.XmlRootElement
 
-@XmlRootElement(name = "studio")
-@XmlAccessorType(XmlAccessType.FIELD)
+@JacksonXmlRootElement(localName = "studio")
 data class MusicStudioDto(
     var id: Int? = null,
     var name: String,

@@ -1,5 +1,7 @@
 package com.soa.products.domain
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.soa.products.ejb.domain.Band
 import com.soa.products.ejb.domain.MusicGenre
 import jakarta.xml.bind.annotation.XmlAccessType
@@ -9,20 +11,18 @@ import jakarta.xml.bind.annotation.XmlRootElement
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter
 import java.time.LocalDate
 
-@XmlRootElement(name = "MusicBand")
-@XmlAccessorType(XmlAccessType.FIELD)
+@JacksonXmlRootElement(localName = "MusicBand")
 data class BandDto(
     var id: Int? = null,
     var name: String? = null,
-    @XmlElement(name = "coordinates")
+    @JacksonXmlProperty(localName = "coordinates")
     var coordinates: CoordinatesDto? = null,
     var numberOfParticipants: Long,
     var albumsCount: Long,
     var description: String,
     var genre: MusicGenre,
-    @field:XmlJavaTypeAdapter(value = LocalDateXmlAdapter::class)
     var creationDate: LocalDate?,
-    @XmlElement(name = "studio")
+    @JacksonXmlProperty(localName = "studio")
     var studio: MusicStudioDto?,
 )
 

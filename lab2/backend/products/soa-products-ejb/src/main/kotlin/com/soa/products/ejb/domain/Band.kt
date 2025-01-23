@@ -2,6 +2,7 @@ package com.soa.products.ejb.domain
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import java.io.Serializable
 import java.time.LocalDate
 
 @Entity
@@ -36,10 +37,10 @@ class Band(
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "music_studio_id")
     var studio: MusicStudio?,
-) {
+): Serializable {
     @Embeddable
     data class Coordinates(
         var x: Double,
         var y: Long?
-    )
+    ): Serializable
 }

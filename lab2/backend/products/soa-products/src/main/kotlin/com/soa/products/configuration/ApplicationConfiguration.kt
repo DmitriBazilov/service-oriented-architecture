@@ -65,4 +65,14 @@ class ApplicationConfiguration {
     fun bestGroupService(context: Context): BestGroupService =
         context.lookup("ejb:/soa-products-ejb-0.0.1-SNAPSHOT/BestGroupServiceImpl!com.soa.products.ejb.service.BestGroupService")
                 as BestGroupService
+
+    @Bean
+    fun productService(context: Context): ProductService =
+        context.lookup("ejb:/soa-products-ejb-0.0.1-SNAPSHOT/ProductServiceImpl!com.soa.products.ejb.service.ProductService")
+                as ProductService
+
+    @Bean
+    fun personService(context: Context): PersonService =
+        context.lookup("ejb:/soa-products-ejb-0.0.1-SNAPSHOT/PersonServiceImpl!com.soa.products.ejb.service.PersonService")
+                as PersonService
 }

@@ -87,5 +87,4 @@ open class BandServiceImpl: BandService {
         bandRepository.update(id, domain)
         return BandService.RemoveStatus.OK
     }
-
 }

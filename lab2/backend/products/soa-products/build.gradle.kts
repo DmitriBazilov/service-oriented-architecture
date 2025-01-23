@@ -5,7 +5,6 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
-	id("org.openapi.generator") version "7.8.0"
 }
 
 group = "com.soa"
@@ -27,6 +26,8 @@ dependencyManagement {
 	}
 }
 
+val jacksonVersion = "2.10.5"
+
 dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
@@ -35,14 +36,23 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.wildfly:wildfly-ejb-client-bom:32.0.0.Final")
 	implementation(project(":soa-products-ejb"))
+}
+
+configurations.all {
+	resolutionStrategy {
+		force("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+		force("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+		force("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+		force("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
+	}
 }
 
 configurations {
@@ -57,47 +67,6 @@ kotlin {
 	}
 }
 
-tasks.withType<KotlinCompile> {
-	dependsOn(tasks.openApiGenerate)
-}
-
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-sourceSets {
-	main {
-		kotlin {
-			srcDirs("${layout.buildDirectory.get().asFile}/generated/openapi/src/main/kotlin")
-		}
-	}
-}
-
-openApiGenerate {
-	generatorName.set("kotlin-spring")
-	inputSpec.set("$projectDir/../../../contract/products-api/api.yaml")
-	outputDir.set("${layout.buildDirectory.get().asFile}/generated/openapi")
-	apiPackage.set("generated.soa.products.controller")
-	modelPackage.set("generated.soa.products.dto")
-	invokerPackage.set("generated.soa.products")
-	configOptions.set(
-		mapOf(
-			"useSpringBoot3" to "true",
-			"dateLibrary" to "java8",
-			"generateApis" to "true",
-			"generateApiTests" to "false",
-			"generateModels" to "true",
-			"generateModelTests" to "false",
-			"generateModelDocumentation" to "false",
-			"generateSupportingFiles" to "false",
-			"hideGenerationTimestamp" to "true",
-			"interfaceOnly" to "true",
-			"library" to "spring-boot",
-			"serializableModel" to "true",
-			"useBeanValidation" to "true",
-			"useTags" to "true",
-			"implicitHeaders" to "true",
-			"openApiNullable" to "false",
-		)
-	)
 }

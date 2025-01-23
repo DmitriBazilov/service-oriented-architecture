@@ -11,6 +11,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -27,9 +28,9 @@ class BestGroupController(
 ) {
 
     @PostMapping
-    fun saveBestGroup(bestGroup: BestGroupDto): Response {
+    fun saveBestGroup(bestGroup: BestGroupDto): ResponseEntity<*> {
         return bestGroupService.saveBestGroup(bestGroup.toDomain()).let {
-            Response.ok().entity(it.toDto()).build()
+            ResponseEntity.ok(it.toDto())
         }
     }
 }
