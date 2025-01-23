@@ -18,7 +18,7 @@ import org.jboss.ejb3.annotation.Pool
 
 @Stateless
 @Pool("band-pool")
-class BandServiceImpl: BandService {
+open class BandServiceImpl: BandService {
 
     @Inject
     private lateinit var bandRepository: BandRepository

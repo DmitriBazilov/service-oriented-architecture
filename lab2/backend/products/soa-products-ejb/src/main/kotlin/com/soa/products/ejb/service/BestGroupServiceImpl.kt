@@ -11,7 +11,7 @@ import org.jboss.ejb3.annotation.Pool
 
 @Stateless
 @Pool("band-pool")
-class BestGroupServiceImpl: BestGroupService {
+open class BestGroupServiceImpl: BestGroupService {
 
     @Inject
     private lateinit var bestGroupRepository: BestGroupRepository

@@ -8,9 +8,12 @@ import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder
+import org.jboss.ejb3.annotation.Pool
+import jakarta.ejb.Stateless
 
-@ApplicationScoped
-class DatabaseSessionManager {
+@Stateless
+@Pool("band-pool")
+open class DatabaseSessionManager {
 
     companion object {
         private const val CONFIG_NAME = "hibernate.cfg.xml"
@@ -29,9 +32,9 @@ class DatabaseSessionManager {
         sessionFactory = configuration.buildSessionFactory()
     }
 
-    fun getSession() = sessionFactory!!.openSession()
+    open fun getSession() = sessionFactory!!.openSession()
 
-    fun closeSession(session: Session) {
+    open fun closeSession(session: Session) {
         if (session.isOpen) {
             session.close()
         }

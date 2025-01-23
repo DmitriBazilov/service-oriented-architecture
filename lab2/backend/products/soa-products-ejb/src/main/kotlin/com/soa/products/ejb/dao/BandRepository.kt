@@ -27,12 +27,12 @@ import java.time.LocalDate
 
 @Stateless
 @Pool("band-pool")
-class BandRepository {
+open class BandRepository {
 
     @Inject
     private lateinit var  databaseSessionManager: DatabaseSessionManager
 
-    fun saveBand(band: Band) {
+    open fun saveBand(band: Band) {
         val session: Session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -51,7 +51,7 @@ class BandRepository {
         }
     }
 
-    fun getBands(filters: List<Filter>, sortClause: SortClause, limitOffset: LimitOffset?): List<Band> {
+    open fun getBands(filters: List<Filter>, sortClause: SortClause, limitOffset: LimitOffset?): List<Band> {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -119,7 +119,7 @@ class BandRepository {
         }
     }
 
-    fun deleteById(id: Int): Int {
+    open fun deleteById(id: Int): Int {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -141,7 +141,7 @@ class BandRepository {
         }
     }
 
-    fun findById(id: Int): Band? {
+    open fun findById(id: Int): Band? {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -163,7 +163,7 @@ class BandRepository {
         }
     }
 
-    fun update(id: Int, band: Band): Band? {
+    open fun update(id: Int, band: Band): Band? {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
@@ -184,7 +184,7 @@ class BandRepository {
         }
     }
 
-    fun deleteByStudioId(studioId: Int): Int {
+    open fun deleteByStudioId(studioId: Int): Int {
         val session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()

@@ -13,12 +13,12 @@ import org.jboss.ejb3.annotation.Pool
 
 @Stateless
 @Pool("band-pool")
-class BestGroupRepository {
+open class BestGroupRepository {
 
     @Inject
     private lateinit var  databaseSessionManager: DatabaseSessionManager
 
-    fun saveBestGroup(bestGroup: BestGroup): BestGroup  {
+    open fun saveBestGroup(bestGroup: BestGroup): BestGroup  {
         val session: Session = databaseSessionManager.getSession()
         try {
             session.beginTransaction()
