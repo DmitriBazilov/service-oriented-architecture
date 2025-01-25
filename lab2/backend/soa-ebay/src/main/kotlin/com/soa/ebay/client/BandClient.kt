@@ -1,28 +1,34 @@
 package com.soa.ebay.client
 
-import com.soa.ebay.model.BestGroupDto
-import jakarta.ws.rs.core.Response
-import org.springframework.beans.factory.annotation.Value
+//import com.soa.ebay.model.BestGroupDto
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
 
+@Component
 class BandClient(
     private val restTemplate: RestTemplate,
-    @Value("\${band.url}")
-    private val url: String,
 ) {
-    fun rewardBand(bandGroupDto: BestGroupDto) {
-        restTemplate.postForEntity(
-            "$url/best-group",
-            bandGroupDto,
-            Response::class.java
+//    fun rewardBand(bandGroupDto: BestGroupDto) {
+//    }
+
+    fun removeParticipants(bandId: Int): ResponseEntity<Unit> {
+        return restTemplate.exchange<Unit>(
+            "$URL/participant/$bandId",
+            HttpMethod.POST,
+            HttpEntity(null, HttpHeaders().apply {
+                contentType = MediaType.APPLICATION_XML
+                accept = listOf(MediaType.ALL)
+            })
         )
     }
 
-    fun removeParticipants(bandId: Int) {
-        restTemplate.postForEntity(
-            "$url/$bandId/participants/remove",
-            null,
-            Response::class.java
-        )
+    companion object {
+        private const val URL = "https://api-gateway:9912/bands"
     }
 }

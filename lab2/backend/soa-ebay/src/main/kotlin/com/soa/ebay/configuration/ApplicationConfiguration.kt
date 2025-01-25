@@ -4,6 +4,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
 import org.apache.hc.client5.http.io.HttpClientConnectionManager
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory
 import org.apache.hc.core5.ssl.SSLContextBuilder
 import org.eclipse.jetty.server.HttpConnectionFactory
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
@@ -40,15 +42,16 @@ class ApplicationConfiguration {
         return http.build()
     }
 
+    @LoadBalanced
     @Bean
     fun restTemplate(
         @Value("\${trust.store}") trustStore: Resource,
         @Value("\${trust.store.password}") trustStorePassword: String
     ): RestTemplate? {
         val sslContext: SSLContext = SSLContextBuilder()
-            .loadTrustMaterial(trustStore.url, trustStorePassword.toCharArray()).build()
+            .loadTrustMaterial { chain, authType -> true }.build()
 
-        val sslConFactory = SSLConnectionSocketFactory(sslContext)
+        val sslConFactory = SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE)
 
         val cm: HttpClientConnectionManager = PoolingHttpClientConnectionManagerBuilder.create()
             .setSSLSocketFactory(sslConFactory)

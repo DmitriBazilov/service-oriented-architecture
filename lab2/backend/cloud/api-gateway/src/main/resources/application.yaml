@@ -12,10 +12,10 @@ eureka:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
 
-#logging:
-#  level:
-#    org.springframework.cloud.gateway: DEBUG
-#    reactor.netty.http.client: DEBUG
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
 
 spring:
   application:
@@ -37,6 +37,10 @@ spring:
         connect-timeout: 1000
         response-timeout: 5s
       routes:
+        - id: soa-bands
+          uri: lb:https://soa-products
+          predicates:
+              - Path=/bands/**
         - id: soa-products
           uri: lb:https://soa-products
           predicates:

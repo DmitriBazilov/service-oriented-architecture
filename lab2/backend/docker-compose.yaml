@@ -48,6 +48,19 @@ services:
     networks:
       - soa
 
+  grammy-server:
+    container_name: grammy
+    image: openjdk:21-oracle
+    depends_on:
+      - eureka-server
+    volumes:
+      - ./soa-ebay/build/libs/ebay-0.0.1-SNAPSHOT.jar:/grammy.jar
+    command: [ "java", "-jar", "grammy.jar" ]
+    networks:
+      - soa
+    ports:
+      - "1515:1515"
+
   config-server:
     build: cloud/config-server
     container_name: config-server
