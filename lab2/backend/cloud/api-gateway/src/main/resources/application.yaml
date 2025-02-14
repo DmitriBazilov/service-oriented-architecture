@@ -40,7 +40,7 @@ spring:
         - id: soa-bands
           uri: lb:https://soa-products
           predicates:
-              - Path=/bands/**
+              - Path=/bands/**, /best-group/**
         - id: soa-products
           uri: lb:https://soa-products
           predicates:

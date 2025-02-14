@@ -44,6 +44,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.0.1.RELEASE")
     implementation("com.orbitz.consul:consul-client:1.5.3")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-ribbon:2.2.10.RELEASE")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.5")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

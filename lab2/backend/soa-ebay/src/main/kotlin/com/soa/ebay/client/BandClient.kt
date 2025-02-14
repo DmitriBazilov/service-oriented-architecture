@@ -1,6 +1,7 @@
 package com.soa.ebay.client
 
 //import com.soa.ebay.model.BestGroupDto
+import com.soa.ebay.model.BestGroupDto
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -14,8 +15,6 @@ import org.springframework.web.client.exchange
 class BandClient(
     private val restTemplate: RestTemplate,
 ) {
-//    fun rewardBand(bandGroupDto: BestGroupDto) {
-//    }
 
     fun removeParticipants(bandId: Int): ResponseEntity<Unit> {
         return restTemplate.exchange<Unit>(
@@ -28,7 +27,22 @@ class BandClient(
         )
     }
 
+    fun rewardBand(rewardDto: BestGroupDto): ResponseEntity<BestGroupDto> {
+        return restTemplate.postForEntity(
+            "$BEST_GROUP_URL",
+            HttpEntity(
+                rewardDto,
+                HttpHeaders().apply {
+                    contentType = MediaType.APPLICATION_XML
+                    accept = listOf(MediaType.ALL)
+                }
+            ),
+            BestGroupDto::class.java
+        )
+    }
+
     companion object {
         private const val URL = "https://api-gateway:9912/bands"
+        private const val BEST_GROUP_URL = "https://api-gateway:9912/best-group"
     }
 }

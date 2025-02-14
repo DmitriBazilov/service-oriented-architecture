@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.io.Serializable
 
 @Entity
 @Table(name = "best_groups")
@@ -19,4 +20,4 @@ class BestGroup (
     @Id
     @Enumerated(EnumType.STRING)
     var genre: MusicGenre,
-)
+) : Serializable
