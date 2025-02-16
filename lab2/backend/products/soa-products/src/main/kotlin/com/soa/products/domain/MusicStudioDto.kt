@@ -18,3 +18,10 @@ fun MusicStudioDto.toDomain() = MusicStudio(
     name = name,
     address = address,
 )
+
+fun MusicStudioDto.toSoap() = com.soa.products.generated.MusicStudioDto().let {
+    it.id = id
+    it.name = name
+    it.address = address
+    it
+}

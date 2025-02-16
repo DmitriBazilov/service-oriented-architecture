@@ -76,20 +76,77 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="RemoveParticipantRequest" type="RemoveParticipantRequest"/>
+    <xs:element name="RemoveParticipantRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bandId" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:complexType name="RemoveParticipantRequest">
+    <xs:element name="RemoveParticipantResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BestGroup">
         <xs:sequence>
-            <xs:element name="bandId" type="xs:int" minOccurs="0"/>
+            <xs:element name="bandId" type="xs:int" />
+            <xs:element name="musicGenre" type="MusicGenre" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="RemoveParticipantResponse" type="RemoveParticipantResponse"/>
+    <xs:element name="RewardBandRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bestGroup" type="BestGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-    <xs:complexType name="RemoveParticipantResponse">
-        <xs:sequence>
-            <xs:element name="status" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:element name="RewardBandResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bestGroup" type="BestGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
+    <xs:element name="GetBandsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filter" type="xs:string" maxOccurs="unbounded"/>
+                <xs:element name="sortClause" type="xs:string"/>
+                <xs:element name="page" type="xs:integer"/>
+                <xs:element name="size" type="xs:integer"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBandsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bands" type="BandDto" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateBandRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="band" type="BandDto" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateBandResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="band" type="BandDto" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

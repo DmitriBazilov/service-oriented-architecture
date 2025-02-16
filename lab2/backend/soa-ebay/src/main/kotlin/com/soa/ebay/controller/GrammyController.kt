@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(
-    path = ["/bands"],
+    path = ["/grammy"],
     produces = ["application/xml"],
     consumes = ["application/xml"]
 )

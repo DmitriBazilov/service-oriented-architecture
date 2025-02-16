@@ -10,6 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement
 import jakarta.xml.bind.annotation.XmlRootElement
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter
 import java.time.LocalDate
+import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
 
 @JacksonXmlRootElement(localName = "MusicBand")
 data class BandDto(
@@ -36,3 +38,16 @@ fun BandDto.toDomain() = Band(
     genre = genre,
     studio = studio?.toDomain(),
 )
+
+fun BandDto.toSoap() = com.soa.products.generated.BandDto().let {
+    it.id = id
+    it.name = name
+    it.coordinates = coordinates?.toSoap()
+    it.numberOfParticipants = numberOfParticipants
+    it.albumsCount = albumsCount
+    it.description = description
+    it.genre = com.soa.products.generated.MusicGenre.valueOf(genre.name)
+    it.creationDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(creationDate.toString())
+    it.studio = studio?.toSoap()
+    it
+}

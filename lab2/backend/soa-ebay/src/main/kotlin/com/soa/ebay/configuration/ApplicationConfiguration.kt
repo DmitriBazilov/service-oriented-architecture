@@ -1,5 +1,6 @@
 package com.soa.ebay.configuration
 
+import com.soa.ebay.client.RestTemplateErrorHandler
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
@@ -42,11 +43,15 @@ class ApplicationConfiguration {
         return http.build()
     }
 
+    @Bean
+    fun errorHandler(): RestTemplateErrorHandler = RestTemplateErrorHandler()
+
     @LoadBalanced
     @Bean
     fun restTemplate(
         @Value("\${trust.store}") trustStore: Resource,
-        @Value("\${trust.store.password}") trustStorePassword: String
+        @Value("\${trust.store.password}") trustStorePassword: String,
+        errorHandler: RestTemplateErrorHandler
     ): RestTemplate? {
         val sslContext: SSLContext = SSLContextBuilder()
             .loadTrustMaterial { chain, authType -> true }.build()
@@ -58,9 +63,12 @@ class ApplicationConfiguration {
             .build()
 
         val httpClient: CloseableHttpClient = HttpClients.custom().setConnectionManager(cm).build()
-        val requestFactory: ClientHttpRequestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
+        val requestFactory: ClientHttpRequestFactory =
+            HttpComponentsClientHttpRequestFactory(httpClient)
 
-        return RestTemplate(requestFactory)
+        return RestTemplate(requestFactory).apply {
+            this.errorHandler = errorHandler
+        }
     }
 
     @Bean

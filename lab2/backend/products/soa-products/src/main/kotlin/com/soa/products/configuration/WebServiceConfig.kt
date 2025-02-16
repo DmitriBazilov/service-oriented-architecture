@@ -23,18 +23,18 @@ class WebServiceConfig {
         return ServletRegistrationBean(servlet, "/ws/*")
     }
 
-    @Bean(name = ["countries"])
-    fun defaultWsdl11Definition(countriesSchema: XsdSchema): DefaultWsdl11Definition {
+    @Bean(name = ["schema"])
+    fun defaultWsdl11Definition(bandSchema: XsdSchema): DefaultWsdl11Definition {
         val wsdl11Definition = DefaultWsdl11Definition()
-        wsdl11Definition.setPortTypeName("CountriesPort")
+        wsdl11Definition.setPortTypeName("bandsPort")
         wsdl11Definition.setLocationUri("/ws")
-        wsdl11Definition.setTargetNamespace("http://products/countries")
-        wsdl11Definition.setSchema(countriesSchema)
+        wsdl11Definition.setTargetNamespace("http://example.com/schema")
+        wsdl11Definition.setSchema(bandSchema)
         return wsdl11Definition
     }
 
     @Bean
-    fun countriesSchema(): XsdSchema {
+    fun bandSchema(): XsdSchema {
         return SimpleXsdSchema(ClassPathResource("schema.xsd"))
     }
 }

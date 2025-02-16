@@ -16,3 +16,9 @@ fun CoordinatesDto.toDomain() = Band.Coordinates(
     x = x,
     y = y!!
 )
+
+fun CoordinatesDto.toSoap() = com.soa.products.generated.CoordinatesDto().let {
+    it.x = x
+    it.y = y
+    it
+}
