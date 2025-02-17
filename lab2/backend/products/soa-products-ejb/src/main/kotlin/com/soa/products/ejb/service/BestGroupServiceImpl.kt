@@ -24,7 +24,7 @@ open class BestGroupServiceImpl: BestGroupService {
     override fun saveBestGroup(bestGroup: BestGroup): BestGroup {
         bandRepository.findById(bestGroup.bandId)
             ?: throw BandOperationException.NotFoundBandException(
-                "Group with ${bestGroup.bandId} does not exists",
+                "404: Group with ${bestGroup.bandId} does not exists",
                 Response.Status.NOT_FOUND.statusCode,
             )
         return bestGroupRepository.saveBestGroup(bestGroup)

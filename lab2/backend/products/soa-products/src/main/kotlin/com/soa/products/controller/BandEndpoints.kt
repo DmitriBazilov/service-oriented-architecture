@@ -15,6 +15,7 @@ import com.soa.products.generated.CoordinatesDto
 import com.soa.products.generated.Country
 import com.soa.products.generated.CreateBandRequest
 import com.soa.products.generated.CreateBandResponse
+import com.soa.products.generated.DeleteBandRequest
 import com.soa.products.generated.GetBandsRequest
 import com.soa.products.generated.GetBandsResponse
 import com.soa.products.generated.GetCountryRequest
@@ -121,6 +122,16 @@ class BandEndpoints(
         val savedBand = bandService.saveBand(domainBand)
         return CreateBandResponse().apply {
             band = savedBand.toDto().toSoap()
+        }
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteBandResponse")
+    fun deleteBand(
+        @RequestPayload request: DeleteBandRequest
+    ) {
+        val cnt = bandService.deleteById(request.bandId)
+        if (cnt == 0) {
+            throw BandOperationException.NotFoundBandException("not found band with id = ${request.bandId}", Status.NOT_FOUND.statusCode)
         }
     }
 

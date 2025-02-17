@@ -149,4 +149,85 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="DeleteBandRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bandId" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBandByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bandId" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBandByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="band" type="BandDto"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBandsByNameSubstrRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="nameSubstr" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBandsByNameSubstrResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bands" type="BandDto" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetCountWhereGenreLowerRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="musicGenre" type="MusicGenre" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetCountWhereGenreLowerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bands" type="BandDto" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateBandRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bandId" type="xs:int" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="band" type="BandDto" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateBandResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="band" type="BandDto" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteByStudioIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="studioId" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

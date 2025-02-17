@@ -24,7 +24,7 @@ open class BestGroupRepository {
             session.beginTransaction()
             val g = session.get(BestGroup::class.java, bestGroup)
             if (g != null)
-                throw BestGroupOperationException.TwiceRewardException("cant reward one group for one genre twice", Status.BAD_REQUEST.statusCode)
+                throw BestGroupOperationException.TwiceRewardException("400: cant reward one group for one genre twice", Status.BAD_REQUEST.statusCode)
             session.persist(bestGroup)
 
             session.transaction.commit()
