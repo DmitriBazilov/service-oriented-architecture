@@ -137,13 +137,18 @@ class BandEndpoints(
         }
     }
 
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetBandByIdRequest")
-//    @ResponsePayload
-//    fun getBandById(
-//        @RequestPayload request: GetBandByIdRequest,
-//    ): GetBandByIdResponse {
-//
-//    }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetBandByIdRequest")
+    @ResponsePayload
+    fun getBandById(
+        @RequestPayload request: GetBandByIdRequest,
+    ): GetBandByIdResponse {
+        val band = bandService.findById(request.bandId)
+        return band?.let {
+            return GetBandByIdResponse().apply {
+                this.band = band.toDto().toSoap()
+            }
+        } ?: throw BandOperationException.NotFoundBandException("not found band with id ${request.bandId}", Status.NOT_FOUND.statusCode)
+    }
 
     companion object {
         private const val NAMESPACE_URI = "http://example.com/schema"

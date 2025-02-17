@@ -30,9 +30,9 @@ class BandClient(
 
     fun rewardBand(rewardDto: BestGroupDto): ResponseEntity<BestGroupDto> {
         return restTemplate.postForEntity(
-            "$MULE_URL/best-group",
+            "$MULE_URL/${rewardDto.bandId}/reward/${rewardDto.musicGenre}",
             HttpEntity(
-                rewardDto,
+                null,
                 HttpHeaders().apply {
                     contentType = MediaType.APPLICATION_XML
                     accept = listOf(MediaType.ALL)
