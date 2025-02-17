@@ -18,6 +18,8 @@ import com.soa.products.generated.CreateBandResponse
 import com.soa.products.generated.DeleteBandRequest
 import com.soa.products.generated.GetBandByIdRequest
 import com.soa.products.generated.GetBandByIdResponse
+import com.soa.products.generated.GetBandsByNameSubstrRequest
+import com.soa.products.generated.GetBandsByNameSubstrResponse
 import com.soa.products.generated.GetBandsRequest
 import com.soa.products.generated.GetBandsResponse
 import com.soa.products.generated.GetCountryRequest
@@ -127,7 +129,7 @@ class BandEndpoints(
         }
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteBandResponse")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteBandRequest")
     fun deleteBand(
         @RequestPayload request: DeleteBandRequest
     ) {
@@ -148,6 +150,20 @@ class BandEndpoints(
                 this.band = band.toDto().toSoap()
             }
         } ?: throw BandOperationException.NotFoundBandException("not found band with id ${request.bandId}", Status.NOT_FOUND.statusCode)
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetBandsByNameSubstrRequest")
+    @ResponsePayload
+    fun getBandsByNameSubstr(
+        @RequestPayload request: GetBandsByNameSubstrRequest,
+    ): GetBandsByNameSubstrResponse {
+        if (request.nameSubstr.isEmpty()) {
+            throw BandOperationException.BandOperationParamsException("name substr should be not empty", Status.BAD_REQUEST.statusCode)
+        }
+        val bands = bandService.findByNameSubstring(request.nameSubstr)
+        return GetBandsByNameSubstrResponse().apply {
+            this.bands.addAll(bands.map { it.toDto().toSoap() })
+        }
     }
 
     companion object {
