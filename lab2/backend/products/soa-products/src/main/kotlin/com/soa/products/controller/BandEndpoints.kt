@@ -10,25 +10,7 @@ import com.soa.products.ejb.domain.MusicStudio
 import com.soa.products.ejb.exception.BandOperationException
 import com.soa.products.ejb.service.BandService
 import com.soa.products.ejb.service.BestGroupService
-import com.soa.products.generated.BandDto
-import com.soa.products.generated.CoordinatesDto
-import com.soa.products.generated.Country
-import com.soa.products.generated.CreateBandRequest
-import com.soa.products.generated.CreateBandResponse
-import com.soa.products.generated.DeleteBandRequest
-import com.soa.products.generated.GetBandByIdRequest
-import com.soa.products.generated.GetBandByIdResponse
-import com.soa.products.generated.GetBandsByNameSubstrRequest
-import com.soa.products.generated.GetBandsByNameSubstrResponse
-import com.soa.products.generated.GetBandsRequest
-import com.soa.products.generated.GetBandsResponse
-import com.soa.products.generated.GetCountryRequest
-import com.soa.products.generated.GetCountryResponse
-import com.soa.products.generated.MusicStudioDto
-import com.soa.products.generated.RemoveParticipantRequest
-import com.soa.products.generated.RemoveParticipantResponse
-import com.soa.products.generated.RewardBandRequest
-import com.soa.products.generated.RewardBandResponse
+import com.soa.products.generated.*
 import jakarta.ws.rs.core.Response.Status
 import org.springframework.ws.server.endpoint.annotation.Endpoint
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot
@@ -163,6 +145,40 @@ class BandEndpoints(
         val bands = bandService.findByNameSubstring(request.nameSubstr)
         return GetBandsByNameSubstrResponse().apply {
             this.bands.addAll(bands.map { it.toDto().toSoap() })
+        }
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetCountWhereGenreLowerRequest")
+    @ResponsePayload
+    fun getCountWhereGenreLower(
+        @RequestPayload request: GetCountWhereGenreLowerRequest,
+    ): GetCountWhereGenreLowerResponse {
+        val bands = bandService.countGenres(MusicGenre.valueOf(request.musicGenre.value()))
+        return GetCountWhereGenreLowerResponse().apply {
+            this.count = bands.size
+        }
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "UpdateBandRequest")
+    @ResponsePayload
+    fun updateBand(
+        @RequestPayload request: UpdateBandRequest
+    ): UpdateBandResponse {
+        request.band.id = request.bandId
+        val updatedBand = bandService.update(request.bandId, request.band.toDomain())
+            ?: throw BandOperationException.NotFoundBandException("not found band with id = ${request.bandId}", Status.NOT_FOUND.statusCode)
+        return UpdateBandResponse().apply {
+            band = updatedBand.toDto().toSoap()
+        }
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteByStudioIdRequest")
+    fun deleteBandByStudioId(
+        @RequestPayload request: DeleteByStudioIdRequest
+    ) {
+        val cnt = bandService.deleteByStudioId(request.studioId)
+        if (cnt == 0) {
+            throw BandOperationException.NotFoundBandException("not found band with studioId ${request.studioId}", Status.NOT_FOUND.statusCode)
         }
     }
 
