@@ -16,6 +16,8 @@ import com.soa.products.generated.Country
 import com.soa.products.generated.CreateBandRequest
 import com.soa.products.generated.CreateBandResponse
 import com.soa.products.generated.DeleteBandRequest
+import com.soa.products.generated.GetBandByIdRequest
+import com.soa.products.generated.GetBandByIdResponse
 import com.soa.products.generated.GetBandsRequest
 import com.soa.products.generated.GetBandsResponse
 import com.soa.products.generated.GetCountryRequest
@@ -134,6 +136,14 @@ class BandEndpoints(
             throw BandOperationException.NotFoundBandException("not found band with id = ${request.bandId}", Status.NOT_FOUND.statusCode)
         }
     }
+
+//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetBandByIdRequest")
+//    @ResponsePayload
+//    fun getBandById(
+//        @RequestPayload request: GetBandByIdRequest,
+//    ): GetBandByIdResponse {
+//
+//    }
 
     companion object {
         private const val NAMESPACE_URI = "http://example.com/schema"

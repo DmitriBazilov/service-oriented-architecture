@@ -12,8 +12,8 @@ class BandClient(
     private val restTemplate: RestTemplate,
 ) {
 
-    fun removeParticipants(bandId: Int): ResponseEntity<MuleResponse> {
-        return restTemplate.postForEntity(
+    fun removeParticipants(bandId: Int): ResponseEntity<Unit> {
+        val status = restTemplate.postForObject(
             "$MULE_URL/$bandId/participants/remove",
             HttpEntity(
                 null,
@@ -23,6 +23,9 @@ class BandClient(
             }),
             MuleResponse::class.java
         )
+        status?.let {
+            return ResponseEntity.status(status.status).build()
+        } ?: return ResponseEntity.internalServerError().build()
     }
 
     fun rewardBand(rewardDto: BestGroupDto): ResponseEntity<BestGroupDto> {
@@ -47,5 +50,5 @@ class BandClient(
 }
 
 data class MuleResponse(
-    val id: Int,
+    val status: Int,
 )
